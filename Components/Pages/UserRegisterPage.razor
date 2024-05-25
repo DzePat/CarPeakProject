@@ -1,41 +1,70 @@
 ﻿@page "/UserRegisterPage"
+@using CarPeak.Components.Classes;
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
+@inject UserService UserService
 
 <div class="Main-Container">
     <label class="Custom-header-1">Personlig Information</label>
-    <input class="inputField" placeholder="Användarnamn" @bind="@UserName" />
-    <input class="inputField" placeholder="Lösenord" @bind="@UserPassword" />
-    <input class="inputField" placeholder="Fullständigt namn" @bind="@UserFullName" />
-    <input class="inputField" placeholder="Adress" @bind="@UserAddress" />
-    <input class="inputField" placeholder="Telefonnummer" @bind="@UserPhoneNumber" />
-    <input class="inputField" placeholder="E-postaddress" @bind="@UserEmail" />
+    <input class="inputField" placeholder="Användarnamn" @bind-value="newUser.Username" />
+    <input class="inputField" placeholder="Lösenord" @bind-value="newUser.Password" />
+    <input class="inputField" placeholder="Fullständigt namn" @bind-value="newUser.FullName" />
+    <input class="inputField" placeholder="Adress" @bind-value="newUser.Address" />
+    <input class="inputField" placeholder="Telefonnummer" @bind-value="newUser.Phone" />
+    <input class="inputField" placeholder="E-postaddress" @bind-value="newUser.Email" />
     <label class="Custom-header-1">Körkortsnummer</label>
-    <input class="inputField" placeholder="Utfärdandeland" @bind="@UserLicenseCountry" />
-    <input class="inputField" placeholder="Utfärandedatum" @bind="@UserLicenseCreDate" />
-    <input class="inputField" placeholder="Utgångsdatum" @bind="@UserLicenseExpDate" />
+    <input class="inputField" placeholder="Utfärdandeland" @bind-value="newUser.UserLicenseCountry" />
+    <input class="inputField" placeholder="Utfärandedatum" @bind-value="newUser.UserLicenseCreDate" />
+    <input class="inputField" placeholder="Utgångsdatum" @bind-value="newUser.UserLicenseExpDate" />
+    <label>@status</label>
     <div>
         <button class="NormalButton" @onclick="ToLoginPage">
             Back
         </button>
-        <button class="NormalButton brown-button">
+        <button class="NormalButton brown-button" @onclick="CreateUser">
             Skapa
         </button>
     </div>
 </div>
 
 @code {
-    private string UserName;
-    private string UserPassword;
-    private string UserFullName;
-    private string UserAddress;
-    private string UserPhoneNumber;
-    private string UserEmail;
-    private string UserLicenseCountry;
-    private string UserLicenseCreDate;
-    private string UserLicenseExpDate;
+    private User newUser = new User();
+    private string status = "";
+
     private void ToLoginPage()
     {
         NavigationManager.NavigateTo("/");
+    }
+
+    private async Task CreateUser()
+    {
+        try
+        {
+            if(newUser.Username != "" && newUser.Password != "")
+            {
+                bool UserExists = await UserService.UserExistsAsync(newUser.Username, newUser.Email);
+                if(UserExists == true)
+                {
+                    status = "User already exists";
+                }
+                else
+                {
+                    newUser.UserRole = "basic";
+                    newUser.SetEmptyStrings();
+                    await UserService.AddUserAsync(newUser);
+                    NavigationManager.NavigateTo("/");
+                }
+            }
+            else
+            {
+                status = "write down name and password";
+            }
+        }
+        catch (Exception ex)
+        {
+            status = $"Error: {ex.Message}";
+            // Log the exception for further investigation
+            Console.WriteLine($"Error in CreateUser: {ex}");
+        }  
     }
 }

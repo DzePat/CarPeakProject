@@ -1,4 +1,6 @@
 using CarPeak.Components;
+using CarPeak.Components.Classes;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarPeak
 {
@@ -11,6 +13,11 @@ namespace CarPeak
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<UserService>();
 
             var app = builder.Build();
 

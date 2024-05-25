@@ -1,13 +1,15 @@
 ﻿@page "/"
+@using CarPeak.Components.Classes
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
+@inject UserService UserService
 
 <div class="Main-Container">
     <div class="vertical-container">
-        <input class="inputField" placeholder="Username" />
+        <input class="inputField" placeholder="Username" @bind-value="@Username"/>
         <div>
-            <input name="UserPassword" type="@passwordInputType" class="inputField" placeholder="Password" />
-            <input type="checkbox" @bind="isPasswordVisible" />
+            <input name="UserPassword" type="@passwordInputType" class="inputField" @bind-value="@UserPassword" placeholder="Password" />
+            <input type="checkbox" @bind="isPasswordVisible"/>
         </div>
     </div>
     <div>
@@ -18,17 +20,28 @@
             Register
         </button>
     </div>
+    <label>@status</label>
 </div>
 
 @code {
     private bool isPasswordVisible = false;
+    private string Username;
+    private string UserPassword;
+    private string status;
     private string passwordInputType => isPasswordVisible ? "text" : "password";
     public void ToRegisterPage()
     {
         NavigationManager.NavigateTo("/UserRegisterPage");
     }
-    public void ToMainMenu(){
-        //authenticate here before going to user mainmenu
-        NavigationManager.NavigateTo("/UserMainMenu");
+    public async Task ToMainMenu(){
+        bool value = await UserService.AuthenticateUserAsync(Username, UserPassword);
+        if(value == true)
+        {
+            NavigationManager.NavigateTo("/UserMainMenu");
+        }
+        else
+        {
+            status = "wrong username or password";
+        }
     }
 }
