@@ -1,0 +1,34 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<div class="Main-Container">
+    <div class="vertical-container">
+        <input class="inputField" placeholder="Username" />
+        <div>
+            <input name="UserPassword" type="@passwordInputType" class="inputField" placeholder="Password" />
+            <input type="checkbox" @bind="isPasswordVisible" />
+        </div>
+    </div>
+    <div>
+        <button class="NormalButton" @onclick="ToMainMenu">
+            Login
+        </button>
+        <button class="NormalButton brown-button" @onclick="ToRegisterPage">
+            Register
+        </button>
+    </div>
+</div>
+
+@code {
+    private bool isPasswordVisible = false;
+    private string passwordInputType => isPasswordVisible ? "text" : "password";
+    public void ToRegisterPage()
+    {
+        NavigationManager.NavigateTo("/UserRegisterPage");
+    }
+    public void ToMainMenu(){
+        //authenticate here before going to user mainmenu
+        NavigationManager.NavigateTo("/UserMainMenu");
+    }
+}

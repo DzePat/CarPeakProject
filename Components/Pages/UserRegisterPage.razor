@@ -1,0 +1,41 @@
+﻿@page "/UserRegisterPage"
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<div class="Main-Container">
+    <label class="Custom-header-1">Personlig Information</label>
+    <input class="inputField" placeholder="Användarnamn" @bind="@UserName" />
+    <input class="inputField" placeholder="Lösenord" @bind="@UserPassword" />
+    <input class="inputField" placeholder="Fullständigt namn" @bind="@UserFullName" />
+    <input class="inputField" placeholder="Adress" @bind="@UserAddress" />
+    <input class="inputField" placeholder="Telefonnummer" @bind="@UserPhoneNumber" />
+    <input class="inputField" placeholder="E-postaddress" @bind="@UserEmail" />
+    <label class="Custom-header-1">Körkortsnummer</label>
+    <input class="inputField" placeholder="Utfärdandeland" @bind="@UserLicenseCountry" />
+    <input class="inputField" placeholder="Utfärandedatum" @bind="@UserLicenseCreDate" />
+    <input class="inputField" placeholder="Utgångsdatum" @bind="@UserLicenseExpDate" />
+    <div>
+        <button class="NormalButton" @onclick="ToLoginPage">
+            Back
+        </button>
+        <button class="NormalButton brown-button">
+            Skapa
+        </button>
+    </div>
+</div>
+
+@code {
+    private string UserName;
+    private string UserPassword;
+    private string UserFullName;
+    private string UserAddress;
+    private string UserPhoneNumber;
+    private string UserEmail;
+    private string UserLicenseCountry;
+    private string UserLicenseCreDate;
+    private string UserLicenseExpDate;
+    private void ToLoginPage()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
