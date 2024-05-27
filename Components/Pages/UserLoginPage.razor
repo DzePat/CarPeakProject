@@ -6,21 +6,21 @@
 
 <div class="Main-Container">
     <div class="vertical-container">
-        <input class="inputField" placeholder="Username" @bind-value="@Username"/>
+        <input class="inputField" placeholder="Användarnamn" @bind-value="@Username"/>
         <div>
-            <input name="UserPassword" type="@passwordInputType" class="inputField" @bind-value="@UserPassword" placeholder="Password" />
+            <input name="UserPassword" type="@passwordInputType" class="inputField" @bind-value="@UserPassword" placeholder="Lösenord" />
             <input type="checkbox" @bind="isPasswordVisible"/>
         </div>
     </div>
     <div>
         <button class="NormalButton" @onclick="ToMainMenu">
-            Login
+            Logga in
         </button>
         <button class="NormalButton brown-button" @onclick="ToRegisterPage">
-            Register
+            Registrera
         </button>
     </div>
-    <label>@status</label>
+    <label class="Text-Enrichment" style="color:white">@status</label>
 </div>
 
 @code {

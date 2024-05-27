@@ -1,15 +1,63 @@
 ﻿@page "/UserMainMenu"
 @using CarPeak.Components.Classes;
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
 
 <div class="top-alignment">
     <div class="Horizontal-Container-Custom-1">
-        <label class="Margin-Class Text-Enrichment">From</label>
+        <label class="Margin-Class Text-Enrichment">Från</label>
         <input class="Margin-Class" name="DateFrom" type="date" @bind-value="booking.DateFrom" />
-        <label class="Margin-Class Text-Enrichment">To</label>
+        <label class="Margin-Class Text-Enrichment">Till</label>
         <input class="Margin-Class" name="DateTo" type="date" @bind-value="booking.DateTo" />
+        <label class="Margin-Class Text-Enrichment">Sittplatser</label>
+        <select class="Margin-Class" style="height: 3vh" @bind="seats">
+            <option value="0">välj</option>
+            <option value="1">2</option>
+            <option value="2">5</option>
+            <option value="3">7</option>
+            <option value="4">8</option>
+        </select>
+        <label class="Margin-Class Text-Enrichment">Växellåda</label>
+        <select class="Margin-Class" style="height: 3vh" @bind="gearbox">
+            <option value="0">välj</option>
+            <option value="1">Manuell</option>
+            <option value="2">Automat</option>
+        </select>
+        <label class="Margin-Class Text-Enrichment">Stad</label>
+        <select class="Margin-Class" style="height: 3vh" @bind="city">
+            <option value="välj">välj</option>
+            <option value="Stockholm">Stockholm</option>
+            <option value="Göteborg">Göteborg</option>
+            <option value="Malmö">Malmö</option>
+            <option value="Uppsala">Uppsala</option>
+            <option value="Linköping">Linköping</option>
+            <option value="Västerås">Västerås</option>
+            <option value="Örebro">Örebro</option>
+            <option value="Helsingborg">Helsingborg</option>
+            <option value="Jönköping">Jönköping</option>
+            <option value="Norrköping">Norrköping</option>
+        </select>
+        <button class="Custom-small-button Absolute-position-top-right" @onclick="LogoutClick">Logga ut</button>
+        <button class="Custom-small-button Margin-Class" style="background-color:green" @onclick="SearchWithFilter">Sök</button>
+    </div>
+    <div class="car-container">
+
     </div>
 </div>
 
 @code {
+    private int seats;
+    private int gearbox;
+    private string city;
     Booking booking = new Booking();
+
+    public void LogoutClick()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    public void SearchWithFilter()
+    {
+        
+    }
 }
