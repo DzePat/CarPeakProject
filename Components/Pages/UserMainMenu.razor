@@ -1,9 +1,15 @@
 ﻿@page "/UserMainMenu"
+@using CarPeak.Components.Classes;
 
-<div class="Main-Container">
-    <label style="color:white; font-size:20vh"> You are logged in</label>
+<div class="top-alignment">
+    <div class="Horizontal-Container-Custom-1">
+        <label class="Margin-Class Text-Enrichment">From</label>
+        <input class="Margin-Class" name="DateFrom" type="date" @bind-value="booking.DateFrom" />
+        <label class="Margin-Class Text-Enrichment">To</label>
+        <input class="Margin-Class" name="DateTo" type="date" @bind-value="booking.DateTo" />
+    </div>
 </div>
 
 @code {
-
+    Booking booking = new Booking();
 }
