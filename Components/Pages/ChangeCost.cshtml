@@ -1,0 +1,28 @@
+﻿@page
+@model CarPeak.Models.ChangeCostModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Ändra kostnad</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="admin-container">
+        <h2>Ändra kostnad</h2>
+        <form method="post">
+            <div>
+                <label for="BookingId">Boknings-ID:</label>
+                <input type="text" id="BookingId" name="BookingId" />
+            </div>
+            <div>
+                <label for="NewCost">Ny kostnad:</label>
+                <input type="text" id="NewCost" name="NewCost" />
+            </div>
+            <div>
+                <button type="submit">Spara</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

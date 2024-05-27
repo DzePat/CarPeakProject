@@ -1,0 +1,37 @@
+﻿@page
+@model CarPeak.Models.AddRemoveCarsModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Lägga till/ta bort bilar</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="admin-container">
+        <h2>Lägga till/ta bort bilar</h2>
+        <form method="post" asp-page-handler="AddCar">
+            <div>
+                <label for="CarModel">Bilmodell:</label>
+                <input type="text" id="CarModel" name="CarModel" />
+            </div>
+            <div>
+                <label for="PricePerDay">Pris per dygn:</label>
+                <input type="text" id="PricePerDay" name="PricePerDay" />
+            </div>
+            <div>
+                <button type="submit">Lägg till bil</button>
+            </div>
+        </form>
+        <form method="post" asp-page-handler="RemoveCar">
+            <div>
+                <label for="CarId">Bil-ID att ta bort:</label>
+                <input type="text" id="CarId" name="CarId" />
+            </div>
+            <div>
+                <button type="submit">Ta bort bil</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

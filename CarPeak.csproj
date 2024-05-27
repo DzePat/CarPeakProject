@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\css\site.css" />
     <None Include="wwwroot\Images\homepage.jpg" />
   </ItemGroup>
 

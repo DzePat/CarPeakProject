@@ -1,0 +1,36 @@
+﻿@page
+@model CarPeak.Models.ManageBookingsModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Ändra bokningar</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="admin-container">
+        <h2>Ändra bokningar</h2>
+        <form method="post">
+            <div>
+                <label for="BookingId">Boknings-ID:</label>
+                <input type="text" id="BookingId" name="BookingId" />
+            </div>
+            <div>
+                <label for="CarId">Bil-ID:</label>
+                <input type="text" id="CarId" name="CarId" />
+            </div>
+            <div>
+                <label for="StartDate">Startdatum:</label>
+                <input type="text" id="StartDate" name="StartDate" placeholder="åååå-mm-dd" />
+            </div>
+            <div>
+                <label for="EndDate">Slutdatum:</label>
+                <input type="text" id="EndDate" name="EndDate" placeholder="åååå-mm-dd" />
+            </div>
+            <div>
+                <button type="submit">Spara</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
