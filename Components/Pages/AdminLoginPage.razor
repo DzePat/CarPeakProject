@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/Admin"
 @using CarPeak.Components.Classes
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
@@ -13,7 +13,7 @@
         </div>
     </div>
     <div>
-        <button class="NormalButton black-button" @onclick="ToMainMenu">
+        <button class="NormalButton" @onclick="ToMainMenu">
             Logga in
         </button>
         <button class="NormalButton brown-button" @onclick="ToRegisterPage">
@@ -37,10 +37,10 @@
 
     public async Task ToMainMenu()
     {
-        bool isAuthenticated = await UserService.AuthenticateRegularUserAsync(Username, UserPassword);
+        bool isAuthenticated = await UserService.AuthenticateAdminUserAsync(Username, UserPassword);
         if (isAuthenticated)
         {
-            NavigationManager.NavigateTo("/UserMainMenu");
+            NavigationManager.NavigateTo("/AdminMainMenu");
         }
         else
         {

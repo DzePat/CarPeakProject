@@ -1,0 +1,32 @@
+﻿@page "/AdminMainMenu"
+@using CarPeak.Components.Classes;
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<div class="top-alignment">
+    <div class="Horizontal-Container-Custom-1">
+        
+        <button class="Custom-small-button Absolute-position-top-right" @onclick="LogoutClick">Logga ut</button>
+        <button class="Custom-small-button Margin-Class" style="background-color:green" @onclick="SearchWithFilter">Sök</button>
+    </div>
+    <div class="car-container">
+
+    </div>
+</div>
+
+@code {
+    private int seats;
+    private int gearbox;
+    private string city;
+    Booking booking = new Booking();
+
+    public void LogoutClick()
+    {
+        NavigationManager.NavigateTo("/Admin");
+    }
+
+    public void SearchWithFilter()
+    {
+        
+    }
+}
