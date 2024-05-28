@@ -6,6 +6,7 @@ namespace CarPeak.Components.Classes
     public class UserService
     {
         private readonly AppDbContext _dbContext;
+        public User? CurrentUser { get; private set; }
 
         public UserService(AppDbContext dbContext)
         {
@@ -28,20 +29,27 @@ namespace CarPeak.Components.Classes
             return await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
-        public async Task<bool> AuthenticateUserAsync(string username, string password)
+        public async Task<bool> AuthenticateAdminUserAsync(string username, string password)
         {
             var user = await GetUserByUsernameAsync(username);
-            if (user != null)
+            if (user != null && user.Password == password && user.UserRole == "Admin")
             {
-                // Compare plain text passwords
-                if (user.Password == password)
-                {
-                    // Authentication successful
-                    return true;
-                }
+                CurrentUser = user; // Set the current user
+                return true;
             }
-            // Authentication failed
+            return false;
+        }
+
+        public async Task<bool> AuthenticateRegularUserAsync(string username, string password)
+        {
+            var user = await GetUserByUsernameAsync(username);
+            if (user != null && user.Password == password && user.UserRole == "basic")
+            {
+                CurrentUser = user; // Set the current user
+                return true;
+            }
             return false;
         }
     }
 }
+
