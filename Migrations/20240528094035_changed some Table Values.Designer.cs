@@ -3,6 +3,7 @@ using System;
 using CarPeak;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarPeak.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240528094035_changed some Table Values")]
+    partial class changedsomeTableValues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
@@ -46,16 +49,13 @@ namespace CarPeak.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("PricePerDay")
-                        .HasColumnType("REAL");
+                    b.Property<string>("PricePerDay")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Size")
                         .HasColumnType("INTEGER");
@@ -64,9 +64,8 @@ namespace CarPeak.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("gearbox")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("gearbox")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("id");
 
