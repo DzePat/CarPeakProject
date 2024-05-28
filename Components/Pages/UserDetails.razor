@@ -1,0 +1,34 @@
+﻿﻿@page "/UserDetails/{Username}"
+@using CarPeak.Components.Classes
+@inject UserService UserService
+
+<h3>User Details</h3>
+
+@if (user == null)
+{
+	<p>Loading...</p>
+}
+else
+{
+	<p>Username: @user.Username</p>
+	<p>Password: @user.Password</p>
+	<p>Full Name: @user.FullName</p>
+	<p>Address: @user.Address</p>
+	<p>Phone Number: @user.Phone</p>
+	<p>Email: @user.Email</p>
+	<p>License Country: @user.UserLicenseCountry</p>
+	<p>License Creation Date: @user.UserLicenseCreDate</p>
+	<p>License Expiration Date: @user.UserLicenseExpDate</p>
+}
+
+@code {
+	[Parameter]
+	public string Username { get; set; }
+
+	public User user { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		user = await UserService.GetUserByUsernameAsync(Username);
+	}
+}

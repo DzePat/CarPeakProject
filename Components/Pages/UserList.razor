@@ -1,0 +1,39 @@
+﻿﻿@page "/UserList"
+@using CarPeak.Components.Classes
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+
+<h3>UserList</h3>
+@if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
+{
+	<h3>Welcome, @UserService.CurrentUser.Username!</h3>
+	<h3>Role: @UserService.CurrentUser.UserRole!</h3>
+	<h2>User List</h2>
+	<ul>
+		@foreach (var user in Users)
+		{
+			<li>
+				<a href="@($"/UserDetails/{user.Username}")">
+					@user.Username
+				</a>
+			</li>
+		}
+	</ul>
+}
+else
+{
+	<p>You are not logged in.</p>
+}
+@code {
+	//Get all list  Users
+	private List<User> Users = new List<User>();
+	protected override async Task OnInitializedAsync()
+	{
+		Users = await UserService.GetUsersAsync();
+	}
+
+	private void NavigateToUser(string username)
+	{
+		NavigationManager.NavigateTo($"/UserDetails/{username}");
+	}
+}
