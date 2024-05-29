@@ -1,0 +1,56 @@
+﻿@page "/CarDetails/{Id:int}"
+@using CarPeak.Components.Classes
+@inject UserService UserService
+
+<h3>Car Details</h3>
+
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else if (car == null)
+{
+    <p>No car found.</p>
+}
+else
+{
+    <p>Id: @car.Id</p>
+	<p>Model: @car.Model</p>
+	<p>Year: @car.Year</p>
+	<p>Size: @car.Size</p>
+	<p>Price: @car.PricePerDay</p>
+
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }  // Ensure this is an int
+    
+    public Car car { get; set; }
+    public bool isLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Console.WriteLine($"Fetching car details for Id: {Id}");
+            car = await UserService.GetCarByIdAsync(Id);
+            if (car == null)
+            {
+                Console.WriteLine("No car found.");
+            }
+            else
+            {
+                Console.WriteLine($"Car found: {car.Id}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching car: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

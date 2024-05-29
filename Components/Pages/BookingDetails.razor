@@ -1,0 +1,46 @@
+﻿@page "/BookingDetails/{Id:int}"
+@using CarPeak.Components.Classes
+@inject UserService UserService
+
+<h3>Booking Details</h3>
+
+@if (booking == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <p>Id: @booking.Id</p>
+    <p>Car Id: @booking.CarId</p>
+    <p>User Id: @booking.UserId</p>
+    <p>Start Date: @booking.DateFrom</p>
+    <p>End Date: @booking.DateTo</p>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Booking booking { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Console.WriteLine($"Fetching booking details for Id: {Id}");
+            booking = await UserService.GetBookingByIdAsync(Id);
+            if (booking == null)
+            {
+                Console.WriteLine("No booking found.");
+            }
+            else
+            {
+                Console.WriteLine($"Booking found: {booking.Id}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching booking: {ex.Message}");
+        }
+    }
+}

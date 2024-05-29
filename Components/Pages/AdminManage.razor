@@ -1,0 +1,43 @@
+﻿@page "/AdminManage"
+@using CarPeak.Components.Classes
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject UserService UserService
+//Notes
+<div>
+    <h3>AdminManage</h3>
+    @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
+    {
+        <h3>Welcome, @UserService.CurrentUser.Username!</h3>
+        <button class="NormalButton" @onclick="NavigateUserList">
+            Show all users
+        </button>
+        <button class="NormalButton" @onclick="NavigateCarList">
+            Show all cars
+        </button>
+        <button class="NormalButton" @onclick="NavigateBookList">
+            Show all books
+        </button>
+    }
+</div>
+@code {
+    public void NavigateUserList()
+    {
+        NavigationManager.NavigateTo("/UserList");
+    }
+
+    public void NavigateCarList()
+    {
+        NavigationManager.NavigateTo("/CarList");
+    }
+
+    public void NavigateBookList()
+    {
+        NavigationManager.NavigateTo("/BookingList");
+    }
+
+    protected override void OnParametersSet()
+    {
+        StateHasChanged();
+    }
+}
