@@ -1,6 +1,7 @@
 ﻿@page "/CarList"
 @using CarPeak.Components.Classes
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 @inject UserService UserService
 
 
@@ -62,7 +63,7 @@
             @foreach (var car in Cars)
             {
                 <li class="car-item">
-                    <a href="@($"/CarDetails/{car.Id}")" class="car-link">@car.Model</a>
+                    <a href="@($"/CarDetails/{car.id}")" class="car-link">@car.Model</a>
                     <div class="car-details">
                         Year: @car.Year - Size: @car.Size
                     </div>

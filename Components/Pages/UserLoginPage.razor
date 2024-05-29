@@ -42,10 +42,12 @@
 		{
 			if (user.UserRole.ToLowerInvariant() == "admin")
 			{
+				UserService.CurrentUser = user;
 				NavigationManager.NavigateTo("/AdminManage");
 			}
 			else
 			{
+				UserService.CurrentUser = user;
 				NavigationManager.NavigateTo("/UserMainMenu");
 			}
 		}

@@ -4,7 +4,7 @@
 @rendermode InteractiveServer
 @inject UserService UserService
 //Notes
-<div>
+<div style="background-color:white; color:black;">
     <h3>AdminManage</h3>
     @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
     {
@@ -21,6 +21,7 @@
     }
 </div>
 @code {
+
     public void NavigateUserList()
     {
         NavigationManager.NavigateTo("/UserList");

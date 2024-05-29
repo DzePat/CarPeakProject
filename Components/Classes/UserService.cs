@@ -8,7 +8,7 @@ namespace CarPeak.Components.Classes
 	public class UserService
 	{
 		private readonly IServiceProvider _serviceProvider;
-		public User? CurrentUser { get; private set; }
+		public User? CurrentUser { get; set; }
 
 		public UserService(IServiceProvider serviceProvider)
 		{
@@ -77,7 +77,7 @@ namespace CarPeak.Components.Classes
 		{
 			using var scope = _serviceProvider.CreateScope();
 			var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-			return await dbContext.Cars.FirstOrDefaultAsync(u => u.Id == id);
+			return await dbContext.Cars.FirstOrDefaultAsync(u => u.id == id);
 		}
 
 		public async Task<Booking?> GetBookingByIdAsync(int id)
@@ -86,26 +86,13 @@ namespace CarPeak.Components.Classes
 			var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 			return await dbContext.Bookings.FirstOrDefaultAsync(u => u.Id == id);
 		}
-	}
-        public async Task<bool> AuthenticateUserAsync(string username, string password)
-        {
-            var user = await GetUserByUsernameAsync(username);
-            if (user != null)
-            {
-                // Compare plain text passwords
-                if (user.Password == password)
-                {
-                    // Authentication successful
-                    return true;
-                }
-            }
-            // Authentication failed
-            return false;
-        }
 
-        public async Task<List<Car>> GetAllCars()
-        {
-            return await _dbContext.Cars.ToListAsync();
-        }
-    }
+		public async Task<List<Car>> GetAllCars()
+		{
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            return await dbContext.Cars.ToListAsync();
+		}
+	} 
 }
+

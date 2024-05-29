@@ -14,7 +14,7 @@ else if (car == null)
 }
 else
 {
-    <p>Id: @car.Id</p>
+    <p>Id: @car.id</p>
 	<p>Model: @car.Model</p>
 	<p>Year: @car.Year</p>
 	<p>Size: @car.Size</p>
@@ -41,7 +41,7 @@ else
             }
             else
             {
-                Console.WriteLine($"Car found: {car.Id}");
+                Console.WriteLine($"Car found: {car.id}");
             }
         }
         catch (Exception ex)
