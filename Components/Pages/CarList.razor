@@ -1,0 +1,90 @@
+﻿@page "/CarList"
+@using CarPeak.Components.Classes
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-message {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .car-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .car-item {
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .car-link {
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .car-details {
+        color: #666;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="container">
+    @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
+    {
+        <div class="welcome-message">
+            Welcome, @UserService.CurrentUser.Username!
+            <br />
+            Role: @UserService.CurrentUser.UserRole
+        </div>
+
+        <h2>Car List</h2>
+        <ul class="car-list">
+            @foreach (var car in Cars)
+            {
+                <li class="car-item">
+                    <a href="@($"/CarDetails/{car.Id}")" class="car-link">@car.Model</a>
+                    <div class="car-details">
+                        Year: @car.Year - Size: @car.Size
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>You are not logged in.</p>
+    }
+</div>
+@code {
+    //Get all list  Users
+    private List<Car> Cars = new List<Car>();
+    protected override async Task OnInitializedAsync()
+    {
+        Cars = await UserService.GetCarsAsync();
+    }
+
+    private void NavigateToUser(string id)
+    {
+        NavigationManager.NavigateTo($"/CarDetails/{id}");
+    }
+}

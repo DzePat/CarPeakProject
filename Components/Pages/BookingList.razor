@@ -1,20 +1,20 @@
-﻿@page "/UserList"
+﻿@page "/BookingList"
 @using CarPeak.Components.Classes
 @inject NavigationManager NavigationManager
 @inject UserService UserService
 
-<h3>UserList</h3>
+<h3>BookingList</h3>
 @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
 {
 	<h3>Welcome, @UserService.CurrentUser.Username!</h3>
 	<h3>Role: @UserService.CurrentUser.UserRole!</h3>
-	<h2>User List</h2>
+	<h2>Booking List</h2>
 	<ul>
-		@foreach (var user in Users)
+		@foreach (var booking in Bookings)
 		{
 			<li>
-				<a href="@($"/UserDetails/{user.Username}")">
-					@user.Username
+				<a href="@($"/BookingDetails/{booking.Id}")">
+					@booking.Id
 				</a>
 			</li>
 		}
@@ -25,15 +25,18 @@ else
 	<p>You are not logged in.</p>
 }
 @code {
-	//Get all list  Users
-	private List<User> Users = new List<User>();
+	[Parameter]
+	public int Id { get; set; }
+
+	private List<Booking> Bookings = new List<Booking>();
+
 	protected override async Task OnInitializedAsync()
 	{
-		Users = await UserService.GetUsersAsync();
+		Bookings = await UserService.GetBookingsAsync();
 	}
 
 	private void NavigateToUser(string username)
 	{
-		NavigationManager.NavigateTo($"/UserDetails/{username}");
+		NavigationManager.NavigateTo($"/BookingDetails/{Id}");
 	}
 }
