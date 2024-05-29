@@ -43,5 +43,10 @@ namespace CarPeak.Components.Classes
             // Authentication failed
             return false;
         }
+
+        public async Task<List<Car>> GetAllCars()
+        {
+            return await _dbContext.Cars.ToListAsync();
+        }
     }
 }

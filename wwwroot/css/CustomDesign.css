@@ -1,7 +1,6 @@
 ﻿.NormalButton{
     width: 10vw;
     height: 6vh;
-    background-color: black;
     color: white;
     margin: 1vh;
     border-radius: 20px;
@@ -11,9 +10,23 @@
     background-color: brown;
 }
 
+.black-button {
+    background-color: black;
+}
+
+.gray-button{
+    background-color: brown;
+}
+
+.green-button{
+    background-color: green;
+}
+
 .NormalButton:hover{
     background-color: coral;
 }
+
+
 
 
 .vertical-container{
@@ -50,4 +63,62 @@
     background-image: url("../Images/homepage.jpg");
     background-size: cover;
     background-position: center;
+}
+
+.Horizontal-Container-Custom-1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 100vw;
+    height: 7vh;
+}
+
+.Margin-Class {
+    margin: 1vh;
+}
+
+.Text-Enrichment{
+    font-size:large;
+    font-family: Arial;
+    font-weight: 600;
+}
+
+.top-alignment {
+    width: 98vw;
+    height: 98vh;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.Custom-small-button {
+    width: 7vw;
+    height: 4vh;
+    background-color: black;
+    color: white;
+    margin: 1vh;
+    border-radius: 20px;
+}
+
+.Absolute-position-top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.car-container {
+    width: 100vw;
+    height: 93vh;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+.Car-Add-holder{
+    height: 20vh;
+    width: 20vw;
+    display: flex;
+    flex-direction: row;
+    border:solid 1px white;
 }

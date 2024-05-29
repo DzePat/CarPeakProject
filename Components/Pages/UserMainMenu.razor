@@ -1,9 +1,122 @@
 ﻿@page "/UserMainMenu"
+@using CarPeak.Components.Classes;
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject CarPeak.Components.Classes.UserService Userservice;
 
-<div class="Main-Container">
-    <label style="color:white; font-size:20vh"> You are logged in</label>
+
+<div class="top-alignment">
+    <div class="Horizontal-Container-Custom-1">
+        <label class="Margin-Class Text-Enrichment">Från</label>
+        <input class="Margin-Class" name="DateFrom" type="date" @bind-value="booking.DateFrom" />
+        <label class="Margin-Class Text-Enrichment">Till</label>
+        <input class="Margin-Class" name="DateTo" type="date" @bind-value="booking.DateTo" />
+        <label class="Margin-Class Text-Enrichment">Sittplatser</label>
+        <select class="Margin-Class" style="height: 3vh" @bind="Seats">
+            <option value="0">välj</option>
+            <option value="1">2</option>
+            <option value="2">5</option>
+            <option value="3">7</option>
+            <option value="4">8</option>
+        </select>
+        <label class="Margin-Class Text-Enrichment">Växellåda</label>
+        <select class="Margin-Class" style="height: 3vh" @bind="Gearbox">
+            <option value="0">välj</option>
+            <option value="1">Manuell</option>
+            <option value="2">Automat</option>
+        </select>
+        <label class="Margin-Class Text-Enrichment">Stad</label>
+        <select class="Margin-Class" style="height: 3vh" @bind="city">
+            <option value="välj">välj</option>
+            <option value="Stockholm">Stockholm</option>
+            <option value="Göteborg">Göteborg</option>
+            <option value="Malmö">Malmö</option>
+            <option value="Uppsala">Uppsala</option>
+            <option value="Linköping">Linköping</option>
+            <option value="Västerås">Västerås</option>
+            <option value="Örebro">Örebro</option>
+            <option value="Helsingborg">Helsingborg</option>
+            <option value="Jönköping">Jönköping</option>
+            <option value="Norrköping">Norrköping</option>
+        </select>
+        <button class="Custom-small-button Absolute-position-top-right" @onclick="LogoutClick">Logga ut</button>
+        <button class="Custom-small-button Margin-Class" style="background-color:green" @onclick="SearchCarsByFilter">Sök</button>
+    </div>
+    <div style="display:flex; justify-content:center; position:absolute; top:10%; left:30%; width: 40vw; height: 60vh; background-color: rgba(0,0,0,0.9); border: solid 1px white; z-index:200; @VisibilityStyle; @PointerEventsStyle">
+        @if(SelectedCar != null)
+        {
+            <div style=" padding: 2vh; height: 40vh; width: 40vw; display: flex; flex-direction: row;">
+                <div style="height: 40vh; width: 25vw; display: flex; flex-direction: column; pointer-events:none;">
+                    <img src="/Images/@SelectedCar.ImageUrl" style="width: 100%; height: 100%; object-fit:cover;" />
+                </div>
+                <div style="height: 40vh; width: 15vw; display: flex; flex-direction: column; background-color: rgba(0, 0, 0, 0.9); pointer-events:none;">
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Model: @SelectedCar.Model</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Price: @SelectedCar.PricePerDay</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Size: @SelectedCar.Size</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Gearbox: @SelectedCar.gearbox</label>
+                </div>
+            </div>           
+        }
+        <div style="display: flex; justify-content:center; align-items:flex-end; margin-top: 10vh">
+            <button class="NormalButton green-button" @onclick="() =>BookSelectedCarClick(SelectedCar)">Boka</button>
+            <button class="NormalButton brown-button" @onclick="() =>CarClicked(null)">Tillbaka</button>
+        </div>
+    </div>
+    @if (Cars != null)
+    {
+        <div class="car-container" id="Main_Car_Container">
+            @foreach (Car car in Cars)
+            {
+                <div style="position:absolute; height: 20vh; width: 25vw; display: flex; flex-direction: row; border:solid 1px white; z-index: 100; cursor: pointer;" @onclick="() =>CarClicked(car)">
+                    <div style="height: 20vh; width: 10vw; display: flex; flex-direction: column; pointer-events:none;">
+                        <img src="/Images/@car.ImageUrl" style="width: 100%; height: 100%; object-fit:cover;"/>
+                    </div>
+                    <div style="height: 20vh; width: 15vw; display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.8); pointer-events:none;">
+                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Model: @car.Model</label>
+                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Price: @car.PricePerDay</label>
+                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Size: @car.Size</label>
+                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Gearbox: @car.gearbox</label>
+                    </div>
+                </div>
+            }
+        </div>    
+    }
 </div>
-
 @code {
+    EventArgs pointer;
+    private int Seats;
+    private int Gearbox;
+    private string city;
+    Booking booking = new Booking();
+    private List<Car> Cars;
+    private Car SelectedCar;
 
+    //Car window pointer events and visibility
+    private bool isVisible = false;
+    private bool arePointerEventsEnabled = false;
+
+    private string VisibilityStyle => isVisible ? "display: block;" : "display: none;";
+    private string PointerEventsStyle => arePointerEventsEnabled ? "pointer-events: auto;" : "pointer-events: none;";
+
+    public void LogoutClick()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    public void CarClicked(Car car)
+    {
+        isVisible = !isVisible;
+        arePointerEventsEnabled = isVisible;
+        SelectedCar = car;
+    }
+
+    public void BookSelectedCarClick(Car car)
+    {
+        //add booking logic;
+    }
+
+    private async Task SearchCarsByFilter()
+    {
+        Cars = await Userservice.GetAllCars();
+    }
 }
