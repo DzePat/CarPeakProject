@@ -87,4 +87,25 @@ namespace CarPeak.Components.Classes
 			return await dbContext.Bookings.FirstOrDefaultAsync(u => u.Id == id);
 		}
 	}
+        public async Task<bool> AuthenticateUserAsync(string username, string password)
+        {
+            var user = await GetUserByUsernameAsync(username);
+            if (user != null)
+            {
+                // Compare plain text passwords
+                if (user.Password == password)
+                {
+                    // Authentication successful
+                    return true;
+                }
+            }
+            // Authentication failed
+            return false;
+        }
+
+        public async Task<List<Car>> GetAllCars()
+        {
+            return await _dbContext.Cars.ToListAsync();
+        }
+    }
 }

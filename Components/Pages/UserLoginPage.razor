@@ -4,23 +4,23 @@
 @rendermode InteractiveServer
 @inject UserService UserService
 
-<div class="Main-Container Backgrounds-image-Main">
-	<div class="vertical-container">
-		<input class="inputField" placeholder="Username" @bind-value="@Username" />
-		<div>
-			<input name="UserPassword" type="@passwordInputType" class="inputField" @bind-value="@UserPassword" placeholder="Password" />
-			<input type="checkbox" @bind="isPasswordVisible" />
-		</div>
-	</div>
-	<div>
-		<button class="NormalButton" @onclick="ToMainMenu">
-			Login
-		</button>
-		<button class="NormalButton brown-button" @onclick="ToRegisterPage">
-			Register
-		</button>
-	</div>
-	<label>@status</label>
+<div class="Main-Container">
+    <div class="vertical-container">
+        <input class="inputField" placeholder="Användarnamn" @bind-value="@Username"/>
+        <div>
+            <input name="UserPassword" type="@passwordInputType" class="inputField" @bind-value="@UserPassword" placeholder="Lösenord" />
+            <input type="checkbox" @bind="isPasswordVisible"/>
+        </div>
+    </div>
+    <div>
+        <button class="NormalButton black-button" @onclick="ToMainMenu">
+            Logga in
+        </button>
+        <button class="NormalButton brown-button" @onclick="ToRegisterPage">
+            Registrera
+        </button>
+    </div>
+    <label class="Text-Enrichment" style="color:white">@status</label>
 </div>
 
 @code {
