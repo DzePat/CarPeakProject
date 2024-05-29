@@ -3,7 +3,7 @@
     public class Car
     {
 
-        public int id { get; set; }
+        public int Id { get; set; }
         public string Model { get; set; }
         public string Year { get; set; }
         public int Size { get; set; }

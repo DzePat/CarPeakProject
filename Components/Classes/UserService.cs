@@ -77,7 +77,7 @@ namespace CarPeak.Components.Classes
 		{
 			using var scope = _serviceProvider.CreateScope();
 			var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-			return await dbContext.Cars.FirstOrDefaultAsync(u => u.id == id);
+			return await dbContext.Cars.FirstOrDefaultAsync(u => u.Id == id);
 		}
 
 		public async Task<Booking?> GetBookingByIdAsync(int id)

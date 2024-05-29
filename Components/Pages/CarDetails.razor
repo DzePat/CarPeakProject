@@ -1,5 +1,6 @@
 ﻿@page "/CarDetails/{Id:int}"
 @using CarPeak.Components.Classes
+@rendermode InteractiveServer
 @inject UserService UserService
 
 <h3>Car Details</h3>
@@ -14,7 +15,11 @@ else if (car == null)
 }
 else
 {
-    <p>Id: @car.id</p>
+    <p>Id: @car.Id</p>
+    <p>
+        ImageUrl:
+        <img src="@car.ImageUrl" alt="Car image" style="max-width:100%; height:auto;" />
+    </p>
 	<p>Model: @car.Model</p>
 	<p>Year: @car.Year</p>
 	<p>Size: @car.Size</p>
@@ -41,7 +46,7 @@ else
             }
             else
             {
-                Console.WriteLine($"Car found: {car.id}");
+                Console.WriteLine($"Car found: {car.Id}");
             }
         }
         catch (Exception ex)
