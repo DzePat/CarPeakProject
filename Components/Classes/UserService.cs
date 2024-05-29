@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using static System.Formats.Asn1.AsnWriter;
 using System.Net.NetworkInformation;
+using CarPeak.Migrations;
 
 namespace CarPeak.Components.Classes
 {
@@ -30,7 +31,33 @@ namespace CarPeak.Components.Classes
 			await dbContext.SaveChangesAsync();
 		}
 
-		public async Task<User> GetUserByUsernamePassAsync(string username, string password)
+        public async Task AddCarAsync(Car car)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            dbContext.Cars.Add(car);
+            await dbContext.SaveChangesAsync();
+        }
+
+		public async Task RemoveCarAsync(int? CarID)
+		{
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var car = await dbContext.Cars.FindAsync(CarID);
+            if (car != null)
+            {
+                dbContext.Cars.Remove(car);
+                await dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                // Handle the case when the car is not found, if necessary
+                throw new Exception("Car not found");
+            }
+        }
+
+        public async Task<User> GetUserByUsernamePassAsync(string username, string password)
 		{
 			using var scope = _serviceProvider.CreateScope();
 			var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -77,7 +104,7 @@ namespace CarPeak.Components.Classes
 		{
 			using var scope = _serviceProvider.CreateScope();
 			var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-			return await dbContext.Cars.FirstOrDefaultAsync(u => u.id == id);
+			return await dbContext.Cars.FirstOrDefaultAsync(u => u.Id == id);
 		}
 
 		public async Task<Booking?> GetBookingByIdAsync(int id)

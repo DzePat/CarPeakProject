@@ -53,7 +53,7 @@
                     <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Model: @SelectedCar.Model</label>
                     <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Price: @SelectedCar.PricePerDay</label>
                     <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Size: @SelectedCar.Size</label>
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Gearbox: @SelectedCar.gearbox</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Gearbox: @SelectedCar.Gearbox</label>
                 </div>
             </div>           
         }
@@ -67,7 +67,7 @@
         <div class="car-container" id="Main_Car_Container">
             @foreach (Car car in Cars)
             {
-                <div style="position:absolute; height: 20vh; width: 25vw; display: flex; flex-direction: row; border:solid 1px white; z-index: 100; cursor: pointer;" @onclick="() =>CarClicked(car)">
+                <div style="height: 20vh; width: 25vw; display: flex; flex-direction: row; border:solid 1px white; z-index: 100; cursor: pointer;" @onclick="() =>CarClicked(car)">
                     <div style="height: 20vh; width: 10vw; display: flex; flex-direction: column; pointer-events:none;">
                         <img src="/Images/@car.ImageUrl" style="width: 100%; height: 100%; object-fit:cover;"/>
                     </div>
@@ -75,7 +75,7 @@
                         <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Model: @car.Model</label>
                         <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Price: @car.PricePerDay</label>
                         <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Size: @car.Size</label>
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Gearbox: @car.gearbox</label>
+                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Gearbox: @car.Gearbox</label>
                     </div>
                 </div>
             }
@@ -83,7 +83,6 @@
     }
 </div>
 @code {
-    EventArgs pointer;
     private int Seats;
     private int Gearbox;
     private string city;

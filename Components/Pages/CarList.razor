@@ -47,6 +47,12 @@
         font-size: 14px;
         margin-top: 10px;
     }
+
+    .center-content{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
 </style>
 
 <div class="container">
@@ -57,15 +63,73 @@
             <br />
             Role: @UserService.CurrentUser.UserRole
         </div>
-
+        <div>
+            <button class="NormalButton black-button" @onclick="CloseClicked">Lägga till</button>
+            <button class="NormalButton brown-button" @onclick="CloseClickedD">Ta bort</button>
+        </div>
+        //Div for adding Car details
+        <div class="center-content" style="position:absolute; width:25vw; height:15vh; background-color:rgba(0,0,0,0.9); border:solid 1px white; z-index:200; @VisibilityStyleD; @PointerEventsStyleD;">
+            <input style="margin: 2vh" placeholder="Bil ID" @bind-value="CarID"/>
+            <div>
+                <button class="NormalButton brown-button" @onclick="RemoveCar">Ta bort</button>
+                <button class="NormalButton black-button" @onclick="CloseClickedD">Tillbaka</button>
+            </div>    
+        </div>
+        <div style="display:flex; justify-content:center; position:absolute; top:10%; left:30%; width: 40vw; height: 60vh; background-color: rgba(0,0,0,0.9); border: solid 1px white; z-index:200; @VisibilityStyle; @PointerEventsStyle">
+                <div style=" padding: 2vh; height: 40vh; width: 40vw; display: flex; flex-direction: column;">
+                <input class="Margin-Class" style="height: 3vh" placeholder="Modell" @bind-value="NewCar.Model" />
+                <input class="Margin-Class" style="height: 3vh" placeholder="Tillverknings år" @bind-value="NewCar.Year" />
+                <select class="Margin-Class" style="height: 3vh" @bind="NewCar.Size">
+                    <option value="0">Sittplatser</option>
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                </select>
+                <select class="Margin-Class" style="height: 3vh" @bind="NewCar.Gearbox">
+                    <option value="null">Växellåda</option>
+                    <option value="Manual">Manuell</option>
+                    <option value="Auto">Automat</option>
+                </select>
+                <input class="Margin-Class" style="height: 3vh" placeholder="PrisPerDag" @bind-value="NewCar.PricePerDay" />
+                <select class="Margin-Class" style="height: 3vh" @bind="NewCar.City">
+                    <option value="null">Stad</option>
+                    <option value="Stockholm">Stockholm</option>
+                    <option value="Göteborg">Göteborg</option>
+                    <option value="Malmö">Malmö</option>
+                    <option value="Uppsala">Uppsala</option>
+                    <option value="Linköping">Linköping</option>
+                    <option value="Västerås">Västerås</option>
+                    <option value="Örebro">Örebro</option>
+                    <option value="Helsingborg">Helsingborg</option>
+                    <option value="Jönköping">Jönköping</option>
+                    <option value="Norrköping">Norrköping</option>
+                </select>
+                <input class="Margin-Class" style="height: 3vh" placeholder="Färg" @bind-value="NewCar.Color" />
+                <input class="Margin-Class" style="height: 3vh" placeholder="BildNamn ex: 'bild.jpg'" @bind-value="NewCar.ImageUrl" />
+                <label style="color:white">@status</label>
+                </div>
+            }
+            <div style="display: flex; justify-content:center; align-items:flex-end; margin-top: 10vh">
+                <button class="NormalButton green-button" @onclick="addCarToDB">Lägga till</button>
+                <button class="NormalButton brown-button" @onclick="CloseClicked">Tillbaka</button>
+            </div>
+        </div>
         <h2>Car List</h2>
         <ul class="car-list">
             @foreach (var car in Cars)
             {
                 <li class="car-item">
-                    <a href="@($"/CarDetails/{car.id}")" class="car-link">@car.Model</a>
+                    <a href="@($"/CarDetails/{car.Id}")" class="car-link">@car.Model</a>
                     <div class="car-details">
-                        Year: @car.Year - Size: @car.Size
+                        <p>
+                            id: @car.Id<br/>
+                            Year: @car.Year <br/>
+                            Size: @car.Size
+                        </p>
                     </div>
                 </li>
             }
@@ -77,6 +141,56 @@
     }
 </div>
 @code {
+    private int? CarID;
+    private string status;
+    Car NewCar = new Car();
+    private bool isVisible = false;
+    private bool arePointerEventsEnabled = false;
+    private string VisibilityStyle => isVisible ? "display: block;" : "display: none;";
+    private string PointerEventsStyle => arePointerEventsEnabled ? "pointer-events: auto;" : "pointer-events: none;";
+
+    private bool isVisibleD = false;
+    private bool arePointerEventsEnabledD = false;
+    private string VisibilityStyleD => isVisibleD ? "display: block;" : "display: none;";
+    private string PointerEventsStyleD => arePointerEventsEnabledD ? "pointer-events: auto;" : "pointer-events: none;";
+
+    public void CloseClicked()
+    {
+        isVisible = !isVisible;
+        arePointerEventsEnabled = isVisible;
+    }
+
+    public void CloseClickedD()
+    {
+        isVisibleD = !isVisibleD;
+        arePointerEventsEnabledD = isVisibleD;
+    }
+
+    public async Task addCarToDB()
+    {
+        Console.WriteLine($"Model: {NewCar.Model}\nYear: {NewCar.Year}\nSeats: {NewCar.Size}\nGearbox: {NewCar.Gearbox}\nPrice: {NewCar.PricePerDay}\nCity: {NewCar.City}\nImageUrl: {NewCar.ImageUrl}\nAllFieldsFull: {NewCar.AllFieldsFilled()}");
+        if (NewCar.AllFieldsFilled())
+        {
+            await UserService.AddCarAsync(NewCar);
+            CloseClicked();
+            Cars = await UserService.GetCarsAsync();
+        }
+        else
+        {
+            status = "Fill in all fields";  
+        }
+    }
+
+    private async Task RemoveCar()
+    {
+        if(CarID != 0)
+        {
+            await UserService.RemoveCarAsync(CarID);
+            CloseClickedD();
+            Cars = await UserService.GetCarsAsync();
+        }
+    }
+
     //Get all list  Users
     private List<Car> Cars = new List<Car>();
     protected override async Task OnInitializedAsync()
