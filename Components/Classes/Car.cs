@@ -9,6 +9,7 @@
         public int Size { get; set; }
         public string gearbox { get; set; }
         public double PricePerDay { get; set; }
+        public string City { get; set; }
         public string ImageUrl { get; set; }
     }
 }
