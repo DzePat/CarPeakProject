@@ -4,29 +4,223 @@
 @inject NavigationManager NavigationManager
 @inject CarPeak.Components.Classes.UserService Userservice;
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+    }
 
-<div class="top-alignment">
-    <div class="Horizontal-Container-Custom-1">
-        <label class="Margin-Class Text-Enrichment">Från</label>
-        <input class="Margin-Class" name="DateFrom" type="date" @bind-value="booking.DateFrom" />
-        <label class="Margin-Class Text-Enrichment">Till</label>
-        <input class="Margin-Class" name="DateTo" type="date" @bind-value="booking.DateTo" />
-        <label class="Margin-Class Text-Enrichment">Sittplatser</label>
-        <select class="Margin-Class" style="height: 3vh" @bind="Seats">
+    .header, .footer {
+        background-color: #343a40;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+    }
+
+    .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 220px; /* Offset for the sidebar width */
+    }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+            .footer a:hover {
+                text-decoration: underline;
+            }
+
+    .sidebar {
+        width: 200px;
+        background-color: #2c2f33;
+        position: fixed;
+        height: 100%;
+        top: 0;
+        left: 0;
+        padding-top: 20px;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            margin: 5px 0;
+        }
+
+            .sidebar a:hover {
+                background-color: #575d63;
+            }
+
+    .main-container {
+        margin-left: 220px; /* Sidebar width + some margin */
+        padding: 20px;
+        display: flex;
+    }
+
+    .search-container {
+        width: 200px;
+        margin-right: 20px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .inputField {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .NormalButton {
+        padding: 10px 20px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .black-button {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .brown-button {
+        background-color: #8B4513;
+        color: white;
+    }
+
+    .green-button {
+        background-color: green;
+        color: white;
+    }
+
+        .black-button:hover, .brown-button:hover, .green-button:hover {
+            opacity: 0.8;
+        }
+
+    .Text-Enrichment {
+        display: block;
+        margin-top: 10px;
+    }
+
+    .car-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        width: calc(100% - 240px); /* Subtract the width of the search container and margin */
+    }
+
+    .car-item {
+        position: relative;
+        height: 20vh;
+        width: 25vw;
+        display: flex;
+        flex-direction: row;
+        border: solid 1px white;
+        z-index: 100;
+        cursor: pointer;
+        margin: 10px;
+    }
+
+        .car-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .car-item-details {
+        height: 20vh;
+        width: 15vw;
+        display: flex;
+        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0.8);
+        pointer-events: none;
+    }
+
+        .car-item-details label {
+            color: black;
+            font-family: Arial;
+            font-size: large;
+            font-weight: 800;
+            margin: 5px;
+        }
+
+    .vertical-container {
+        max-width: 400px;
+        margin: 50px auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .social-media {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+        .social-media a {
+            margin: 0 10px;
+            color: white;
+        }
+
+            .social-media a:hover {
+                opacity: 0.7;
+            }
+</style>
+
+<div class="header">
+    Car Rental Service
+</div>
+
+<div class="sidebar">
+    <a href="/">Home</a>
+    <a href="/about">About Us</a>
+    <a href="/contact">Contact</a>
+</div>
+
+<div class="main-container">
+    <div class="search-container">
+        <label class="Text-Enrichment">Från</label>
+        <input class="inputField" name="DateFrom" type="date" @bind-value="booking.DateFrom" />
+        <label class="Text-Enrichment">Till</label>
+        <input class="inputField" name="DateTo" type="date" @bind-value="booking.DateTo" />
+        <label class="Text-Enrichment">Sittplatser</label>
+        <select class="inputField" @bind="Seats">
             <option value="0">välj</option>
             <option value="1">2</option>
             <option value="2">5</option>
             <option value="3">7</option>
             <option value="4">8</option>
         </select>
-        <label class="Margin-Class Text-Enrichment">Växellåda</label>
-        <select class="Margin-Class" style="height: 3vh" @bind="Gearbox">
+        <label class="Text-Enrichment">Växellåda</label>
+        <select class="inputField" @bind="Gearbox">
             <option value="0">välj</option>
             <option value="1">Manuell</option>
             <option value="2">Automat</option>
         </select>
-        <label class="Margin-Class Text-Enrichment">Stad</label>
-        <select class="Margin-Class" style="height: 3vh" @bind="city">
+        <label class="Text-Enrichment">Stad</label>
+        <select class="inputField" @bind="city">
             <option value="välj">välj</option>
             <option value="Stockholm">Stockholm</option>
             <option value="Göteborg">Göteborg</option>
@@ -39,13 +233,14 @@
             <option value="Jönköping">Jönköping</option>
             <option value="Norrköping">Norrköping</option>
         </select>
-        <button class="Custom-small-button Absolute-position-top-right" @onclick="LogoutClick">Logga ut</button>
-        <button class="Custom-small-button Margin-Class" style="background-color:green" @onclick="SearchCarsByFilter">Sök</button>
+        <button class="NormalButton black-button" @onclick="LogoutClick">Logga ut</button>
+        <button class="NormalButton green-button" @onclick="SearchCarsByFilter">Sök</button>
     </div>
+
     <div style="display:flex; justify-content:center; position:absolute; top:10%; left:30%; width: 40vw; height: 60vh; background-color: rgba(0,0,0,0.9); border: solid 1px white; z-index:200; @VisibilityStyle; @PointerEventsStyle">
-        @if(SelectedCar != null)
+        @if (SelectedCar != null)
         {
-            <div style=" padding: 2vh; height: 40vh; width: 40vw; display: flex; flex-direction: row;">
+            <div style="padding: 2vh; height: 40vh; width: 40vw; display: flex; flex-direction: row;">
                 <div style="height: 40vh; width: 25vw; display: flex; flex-direction: column; pointer-events:none;">
                     <img src="/Images/@SelectedCar.ImageUrl" style="width: 100%; height: 100%; object-fit:cover;" />
                 </div>
@@ -55,33 +250,49 @@
                     <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Size: @SelectedCar.Size</label>
                     <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Gearbox: @SelectedCar.gearbox</label>
                 </div>
-            </div>           
+            </div>
         }
         <div style="display: flex; justify-content:center; align-items:flex-end; margin-top: 10vh">
             <button class="NormalButton green-button" @onclick="() =>BookSelectedCarClick(SelectedCar)">Boka</button>
             <button class="NormalButton brown-button" @onclick="() =>CarClicked(null)">Tillbaka</button>
         </div>
     </div>
+
     @if (Cars != null)
     {
         <div class="car-container" id="Main_Car_Container">
             @foreach (Car car in Cars)
             {
-                <div style="position:absolute; height: 20vh; width: 25vw; display: flex; flex-direction: row; border:solid 1px white; z-index: 100; cursor: pointer;" @onclick="() =>CarClicked(car)">
+                <div class="car-item" @onclick="() =>CarClicked(car)">
                     <div style="height: 20vh; width: 10vw; display: flex; flex-direction: column; pointer-events:none;">
-                        <img src="/Images/@car.ImageUrl" style="width: 100%; height: 100%; object-fit:cover;"/>
+                        <img src="/Images/@car.ImageUrl" class="car-item-img" />
                     </div>
-                    <div style="height: 20vh; width: 15vw; display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.8); pointer-events:none;">
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Model: @car.Model</label>
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Price: @car.PricePerDay</label>
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Size: @car.Size</label>
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Gearbox: @car.gearbox</label>
+                    <div class="car-item-details">
+                        <label>Model: @car.Model</label>
+                        <label>Price: @car.PricePerDay</label>
+                        <label>Size: @car.Size</label>
+                        <label>Gearbox: @car.gearbox</label>
                     </div>
                 </div>
             }
-        </div>    
+        </div>
     }
 </div>
+
+<div class="footer">
+    <div>&copy; 2024 Car Rental Service</div>
+    <div class="social-media">
+        <a href="https://www.facebook.com" target="_blank">Facebook</a>
+        <a href="https://www.twitter.com" target="_blank">Twitter</a>
+        <a href="https://www.instagram.com" target="_blank">Instagram</a>
+        <a href="https://www.linkedin.com" target="_blank">LinkedIn</a>
+    </div>
+    <div>
+        <a href="/privacy">Privacy Policy</a> |
+        <a href="/terms">Terms of Service</a>
+    </div>
+</div>
+
 @code {
     EventArgs pointer;
     private int Seats;
@@ -91,7 +302,7 @@
     private List<Car> Cars;
     private Car SelectedCar;
 
-    //Car window pointer events and visibility
+    // Car window pointer events and visibility
     private bool isVisible = false;
     private bool arePointerEventsEnabled = false;
 
@@ -112,7 +323,7 @@
 
     public void BookSelectedCarClick(Car car)
     {
-        //add booking logic;
+        // Add booking logic
     }
 
     private async Task SearchCarsByFilter()
