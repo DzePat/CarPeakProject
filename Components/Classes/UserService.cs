@@ -119,6 +119,30 @@ namespace CarPeak.Components.Classes
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             return await dbContext.Cars.ToListAsync();
 		}
-	} 
+
+
+        public async Task DeleteBookingAsync(int id)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var booking = await dbContext.Bookings.FindAsync(id);
+            if (booking != null)
+            {
+                dbContext.Bookings.Remove(booking);
+                await dbContext.SaveChangesAsync();
+            }
+        }
+
+
+        public async Task UpdateBookingAsync(Booking updatedBooking)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            dbContext.Bookings.Update(updatedBooking);
+            await dbContext.SaveChangesAsync();
+        }
+
+
+    }
 }
 

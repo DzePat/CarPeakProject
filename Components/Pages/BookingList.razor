@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 @inject UserService UserService
+@inject IJSRuntime JsRuntime
 
 <style>
     .container {
@@ -46,6 +47,14 @@
         font-size: 14px;
         margin-top: 10px;
     }
+
+    .button-group {
+        margin-top: 10px;
+    }
+
+        .button-group button {
+            margin-right: 10px;
+        }
 </style>
 
 <div class="container">
@@ -65,6 +74,10 @@
                     <a href="@($"/BookingDetails/{booking.Id}")" class="booking-link">Booking ID: @booking.Id</a>
                     <div class="booking-details">
                         Customer Name: @booking.CustomerName - Car Name: @booking.CarName
+                    </div>
+                    <div class="button-group">
+                        <button @onclick="() => EditBooking(booking.Id)">Edit</button>
+                        <button @onclick="() => DeleteBooking(booking.Id)">Delete</button>
                     </div>
                 </li>
             }
@@ -87,5 +100,20 @@
     private void NavigateToBooking(int id)
     {
         NavigationManager.NavigateTo($"/BookingDetails/{id}");
+    }
+
+    private void EditBooking(int id)
+    {
+        NavigationManager.NavigateTo($"/EditBooking/{id}");
+    }
+
+    private async Task DeleteBooking(int id)
+    {
+        var confirm = await JsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete booking {id}?");
+        if (confirm)
+        {
+            await UserService.DeleteBookingAsync(id);
+            Bookings = await UserService.GetBookingsAsync(); // Refresh the list after deletion
+        }
     }
 }
