@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using static System.Formats.Asn1.AsnWriter;
 using System.Net.NetworkInformation;
+using Microsoft.Data.Sqlite;
 
 namespace CarPeak.Components.Classes
 {
@@ -65,15 +66,40 @@ namespace CarPeak.Components.Classes
 			return await dbContext.Cars.ToListAsync();
 		}
 
-		public async Task<List<Booking>> GetBookingsAsync()
-		{
-			using var scope = _serviceProvider.CreateScope();
-			var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-			return await dbContext.Bookings.ToListAsync();
-		}
+        public async Task<List<Booking>> GetBookingsAsync()
+        {
+            var bookings = new List<Booking>();
+
+            using (var connection = new SqliteConnection("Data Source=app.db"))
+            {
+                await connection.OpenAsync();
+
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+            SELECT Id, CustomerName, CarName
+            FROM Bookings";
+
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var booking = new Booking
+                        {
+                            Id = reader.GetInt32(0),
+                            CarName = reader.GetString(1),
+                            CustomerName = reader.GetString(2)
+                        };
+                        bookings.Add(booking);
+                    }
+                }
+            }
+
+            return bookings;
+        }
 
 
-		public async Task<Car?> GetCarByIdAsync(int id)
+
+        public async Task<Car?> GetCarByIdAsync(int id)
 		{
 			using var scope = _serviceProvider.CreateScope();
 			var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
