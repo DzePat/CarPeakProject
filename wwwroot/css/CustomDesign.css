@@ -109,6 +109,8 @@
 }
 
 .car-container {
+    display: flex;
+    flex-direction: row;
     width: 100vw;
     height: 93vh;
     overflow-y: scroll;

@@ -14,16 +14,19 @@
         <label class="Margin-Class Text-Enrichment">Sittplatser</label>
         <select class="Margin-Class" style="height: 3vh" @bind="Seats">
             <option value="0">välj</option>
-            <option value="1">2</option>
-            <option value="2">5</option>
-            <option value="3">7</option>
-            <option value="4">8</option>
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
         </select>
         <label class="Margin-Class Text-Enrichment">Växellåda</label>
         <select class="Margin-Class" style="height: 3vh" @bind="Gearbox">
-            <option value="0">välj</option>
-            <option value="1">Manuell</option>
-            <option value="2">Automat</option>
+            <option value="välj">välj</option>
+            <option value="Manuell">Manuell</option>
+            <option value="Auto">Automat</option>
         </select>
         <label class="Margin-Class Text-Enrichment">Stad</label>
         <select class="Margin-Class" style="height: 3vh" @bind="city">
@@ -42,18 +45,21 @@
         <button class="Custom-small-button Absolute-position-top-right" @onclick="LogoutClick">Logga ut</button>
         <button class="Custom-small-button Margin-Class" style="background-color:green" @onclick="SearchCarsByFilter">Sök</button>
     </div>
-    <div style="display:flex; justify-content:center; position:absolute; top:10%; left:30%; width: 40vw; height: 60vh; background-color: rgba(0,0,0,0.9); border: solid 1px white; z-index:200; @VisibilityStyle; @PointerEventsStyle">
+    <div style="display:flex; justify-content:center; position:absolute; top:10%; left:30%; width: 50vw; height: 60vh; background-color: rgba(0,0,0,0.9); border: solid 1px white; z-index:200; @VisibilityStyle; @PointerEventsStyle">
         @if(SelectedCar != null)
         {
-            <div style=" padding: 2vh; height: 40vh; width: 40vw; display: flex; flex-direction: row;">
-                <div style="height: 40vh; width: 25vw; display: flex; flex-direction: column; pointer-events:none;">
-                    <img src="/Images/@SelectedCar.ImageUrl" style="width: 100%; height: 100%; object-fit:cover;" />
+            <div style=" padding: 2vh; height: 40vh; width: 50vw; display: flex; flex-direction: row;">
+                <div style="height: 40vh; width: 35vw; display: flex; flex-direction: column; pointer-events:none;">
+                    <img src="/Images/@SelectedCar.ImageUrl" style="width: 100%; height: 100%; object-fit:fill" />
                 </div>
                 <div style="height: 40vh; width: 15vw; display: flex; flex-direction: column; background-color: rgba(0, 0, 0, 0.9); pointer-events:none;">
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Model: @SelectedCar.Model</label>
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Price: @SelectedCar.PricePerDay</label>
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Size: @SelectedCar.Size</label>
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Gearbox: @SelectedCar.Gearbox</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Modell: @SelectedCar.Model</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Tillverknings år: @SelectedCar.Year</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Pris: @SelectedCar.PricePerDay Kr/Dag</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Sittplatser: @SelectedCar.Size</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Växellåda: @SelectedCar.Gearbox</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Stad: @SelectedCar.City</label>
+                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Färg: @SelectedCar.Color</label>
                 </div>
             </div>           
         }
@@ -64,18 +70,18 @@
     </div>
     @if (Cars != null)
     {
-        <div class="car-container" id="Main_Car_Container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(22vw, 1fr)); grid-auto-rows: 20vh; gap: 1vh; width: 100vw; height: 93vh; overflow-y: auto;">
             @foreach (Car car in Cars)
             {
-                <div style="height: 20vh; width: 25vw; display: flex; flex-direction: row; border:solid 1px white; z-index: 100; cursor: pointer;" @onclick="() =>CarClicked(car)">
-                    <div style="height: 20vh; width: 10vw; display: flex; flex-direction: column; pointer-events:none;">
+                <div style="margin: 1px; height: 20vh; width: 24vw; display: flex; flex-direction: row; border:solid 1px white; z-index: 100; cursor: pointer;" @onclick="() =>CarClicked(car)">
+                    <div style="height: 20vh; width: 12vw; display: flex; flex-direction: column; pointer-events:none;">
                         <img src="/Images/@car.ImageUrl" style="width: 100%; height: 100%; object-fit:cover;"/>
                     </div>
-                    <div style="height: 20vh; width: 15vw; display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.8); pointer-events:none;">
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Model: @car.Model</label>
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Price: @car.PricePerDay</label>
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Size: @car.Size</label>
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Gearbox: @car.Gearbox</label>
+                    <div style="height: 20vh; width: 12vw; display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.8); pointer-events:none;">
+                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Modell: @car.Model</label>
+                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Pris: @car.PricePerDay Kr/Dag</label>
+                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Sittplatser: @car.Size</label>
+                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Växellåda: @car.Gearbox</label>
                     </div>
                 </div>
             }
@@ -84,7 +90,7 @@
 </div>
 @code {
     private int Seats;
-    private int Gearbox;
+    private string Gearbox;
     private string city;
     Booking booking = new Booking();
     private List<Car> Cars;
@@ -116,6 +122,6 @@
 
     private async Task SearchCarsByFilter()
     {
-        Cars = await Userservice.GetAllCars();
+        Cars = await Userservice.GetCarsByFilter(Seats,Gearbox,city,booking.DateFrom,booking.DateTo);
     }
 }
