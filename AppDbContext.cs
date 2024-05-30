@@ -14,5 +14,12 @@ namespace CarPeak
         public DbSet<Car> Cars { get; set; }
 
         public DbSet<Booking> Bookings { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Car>()
+                .Property(c => c.Id)
+                .ValueGeneratedOnAdd();  // This ensures EF knows Id is auto-incremented
+        }
     }
 }

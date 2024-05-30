@@ -39,6 +39,11 @@ namespace CarPeak.Components.Classes
             await dbContext.SaveChangesAsync();
         }
 
+		public async Task CarIsNotBooked(int CarID,DateTime datefrom,DateTime dateto)
+		{
+
+		}
+
 		public async Task RemoveCarAsync(int? CarID)
 		{
             using var scope = _serviceProvider.CreateScope();
@@ -114,12 +119,32 @@ namespace CarPeak.Components.Classes
 			return await dbContext.Bookings.FirstOrDefaultAsync(u => u.Id == id);
 		}
 
-		public async Task<List<Car>> GetAllCars()
+		public async Task<List<Car>> GetCarsByFilter(int size,string gearbox,string city,DateTime TimeFrom,DateTime TimeTo)
 		{
             using var scope = _serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            return await dbContext.Cars.ToListAsync();
-		}
+
+            var query = dbContext.Cars.AsQueryable();
+
+			Console.WriteLine($"size = {size}\ngearbox{gearbox}\ncity:{city}");
+
+            if (size != 0)
+            {
+                query = query.Where(car => car.Size == size);
+            }
+
+            if (gearbox != "välj" && gearbox != null)
+            {
+                query = query.Where(car => car.Gearbox == gearbox);
+            }
+
+            if (city != "välj" && city != null)
+            {
+                query = query.Where(car => car.City == city);
+            }
+
+            return await query.ToListAsync();
+        }
 	} 
 }
 
