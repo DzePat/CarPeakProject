@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using static System.Formats.Asn1.AsnWriter;
 using System.Net.NetworkInformation;
 using CarPeak.Migrations;
+using System.Drawing;
+using System.Reflection.Metadata.Ecma335;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CarPeak.Components.Classes
 {
@@ -39,10 +42,26 @@ namespace CarPeak.Components.Classes
             await dbContext.SaveChangesAsync();
         }
 
-		public async Task CarIsNotBooked(int CarID,DateTime datefrom,DateTime dateto)
-		{
+        public async Task AddBookingAsync(Booking booking)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            dbContext.Bookings.Add(booking);
+            await dbContext.SaveChangesAsync();
+        }
 
-		}
+        public async Task<bool> CarIsNotBooked(int CarID,DateTime datefrom,DateTime dateto)
+		{
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            // Query bookings for the specific car that overlap with the provided date range
+            var bookings = await dbContext.Bookings
+                .Where(b => b.CarId == CarID && !(dateto < b.DateFrom.Date || datefrom > b.DateTo.Date))
+				.ToListAsync();
+            // If any bookings are found, the car is booked for the given date range
+            return !bookings.Any();
+        }
 
 		public async Task RemoveCarAsync(int? CarID)
 		{
@@ -143,7 +162,21 @@ namespace CarPeak.Components.Classes
                 query = query.Where(car => car.City == city);
             }
 
-            return await query.ToListAsync();
+			//check if its not booked at the picked dates
+            List<Car> cars = await query.ToListAsync();
+
+			List<Car> FilteredCars = new List<Car>();
+
+			foreach(var car in cars)
+			{
+				bool isNotBooked = await CarIsNotBooked(car.Id, TimeFrom, TimeTo);
+				if(isNotBooked)
+				{
+					FilteredCars.Add(car);
+				}
+            }
+
+			return FilteredCars;
         }
 	} 
 }

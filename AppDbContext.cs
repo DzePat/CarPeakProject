@@ -19,7 +19,10 @@ namespace CarPeak
         {
             modelBuilder.Entity<Car>()
                 .Property(c => c.Id)
-                .ValueGeneratedOnAdd();  // This ensures EF knows Id is auto-incremented
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Booking>()
+            .HasKey(b => b.Id);
         }
     }
 }

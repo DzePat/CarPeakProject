@@ -115,13 +115,34 @@
         SelectedCar = car;
     }
 
-    public void BookSelectedCarClick(Car car)
+    public async void BookSelectedCarClick(Car car)
     {
-        //add booking logic;
+        booking.CarId = car.Id;
+        booking.UserId = Userservice.CurrentUser.Id;
+        if(AllInfoFilled(booking))
+        {
+            await Userservice.AddBookingAsync(booking);
+            Console.WriteLine("Booked Succesfully");
+            CarClicked(null);
+        }
+        else
+        {
+            Console.WriteLine($"Carid: {booking.CarId} UserId: {booking.UserId}");
+        }
+
     }
 
     private async Task SearchCarsByFilter()
     {
         Cars = await Userservice.GetCarsByFilter(Seats,Gearbox,city,booking.DateFrom,booking.DateTo);
+    }
+
+    public bool AllInfoFilled(Booking bking)
+    {
+        if (bking.UserId != 0 && bking.CarId != 0)
+        {
+            return true;
+        }
+        else return false;
     }
 }
