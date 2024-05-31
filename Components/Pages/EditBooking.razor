@@ -1,0 +1,44 @@
+﻿@page "/EditBooking/{Id:int}"
+@using CarPeak.Components.Classes
+@rendermode InteractiveServer
+@inject UserService UserService
+@inject NavigationManager NavigationManager
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Booking booking = new Booking();
+
+    protected override async Task OnInitializedAsync()
+    {
+        booking = await UserService.GetBookingByIdAsync(Id);
+    }
+
+    private async Task Save()
+    {
+        await UserService.UpdateBookingAsync(booking);
+        NavigationManager.NavigateTo("/BookingList");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/BookingList");
+    }
+}
+
+<div class="container">
+    <h3>Edit Booking</h3>
+    <div>
+        <label>Customer Name:</label>
+        <input @bind="booking.CustomerName" />
+    </div>
+    <div>
+        <label>Car Name:</label>
+        <input @bind="booking.CarName" />
+    </div>
+    <div>
+        <button @onclick="Save">Save</button>
+        <button @onclick="Cancel">Cancel</button>
+    </div>
+</div>
+

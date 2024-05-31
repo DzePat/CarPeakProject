@@ -4,56 +4,213 @@
 @rendermode InteractiveServer
 @inject UserService UserService
 
-<div class="Main-Container">
-    <div class="vertical-container">
-        <input class="inputField" placeholder="Användarnamn" @bind-value="@Username"/>
-        <div>
-            <input name="UserPassword" type="@passwordInputType" class="inputField" @bind-value="@UserPassword" placeholder="Lösenord" />
-            <input type="checkbox" @bind="isPasswordVisible"/>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+    }
+
+    .header, .footer {
+        background-color: #343a40;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+    }
+
+    .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 220px; /* Offset for the sidebar width */
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+            .footer a:hover {
+                text-decoration: underline;
+            }
+
+    .sidebar {
+        width: 200px;
+        background-color: #2c2f33;
+        position: fixed;
+        height: 100%;
+        top: 0;
+        left: 0;
+        padding-top: 20px;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            margin: 5px 0;
+        }
+
+            .sidebar a:hover {
+                background-color: #575d63;
+            }
+
+    .main-container {
+        margin-left: 220px; /* Sidebar width + some margin */
+        padding: 20px;
+    }
+
+    .inputField {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .NormalButton {
+        padding: 10px 20px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .black-button {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .brown-button {
+        background-color: #8B4513;
+        color: white;
+    }
+
+        .black-button:hover, .brown-button:hover {
+            opacity: 0.8;
+        }
+
+    .Text-Enrichment {
+        display: block;
+        margin-top: 10px;
+    }
+
+    .login-container {
+        max-width: 400px;
+        margin: 50px auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .social-media {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+        .social-media a {
+            margin: 0 10px;
+            color: white;
+        }
+
+            .social-media a:hover {
+                opacity: 0.7;
+            }
+</style>
+
+<div class="header">
+    Car Rental Service
+</div>
+
+<div class="sidebar">
+    <a href="/">Home</a>
+    <a href="/about">About Us</a>
+    <a href="/contact">Contact</a>
+</div>
+
+<div class="main-container">
+    <div class="login-container">
+        <h2>Logga in</h2>
+        <div class="vertical-container">
+            <input class="inputField" placeholder="Användarnamn" @bind-value="@Username" />
+            <div>
+                <input name="UserPassword" type="@passwordInputType" class="inputField" @bind-value="@UserPassword" placeholder="Lösenord" />
+                <input type="checkbox" @bind="isPasswordVisible" /> Visa Lösenord
+            </div>
         </div>
+        <div>
+            <button class="NormalButton black-button" @onclick="ToMainMenu">
+                Logga in
+            </button>
+            <button class="NormalButton brown-button" @onclick="ToRegisterPage">
+                Registrera
+            </button>
+        </div>
+        <label class="Text-Enrichment">@status</label>
+    </div>
+</div>
+
+<div class="footer">
+    <div>&copy; 2024 Car Rental Service</div>
+    <div class="social-media">
+        <a href="https://www.facebook.com" target="_blank">Facebook</a>
+        <a href="https://www.twitter.com" target="_blank">Twitter</a>
+        <a href="https://www.instagram.com" target="_blank">Instagram</a>
+        <a href="https://www.linkedin.com" target="_blank">LinkedIn</a>
     </div>
     <div>
-        <button class="NormalButton black-button" @onclick="ToMainMenu">
-            Logga in
-        </button>
-        <button class="NormalButton brown-button" @onclick="ToRegisterPage">
-            Registrera
-        </button>
+        <a href="/privacy">Privacy Policy</a> |
+        <a href="/terms">Terms of Service</a>
     </div>
-    <label class="Text-Enrichment" style="color:white">@status</label>
 </div>
 
 @code {
-	private bool isPasswordVisible = false;
-	private string Username;
-	private string UserPassword; 
-	private string status; 
-	private string passwordInputType => isPasswordVisible ? "text" : "password";
+    private bool isPasswordVisible = false;
+    private string Username;
+    private string UserPassword;
+    private string status;
+    private string passwordInputType => isPasswordVisible ? "text" : "password";
 
-	public void ToRegisterPage()
-	{
-		NavigationManager.NavigateTo("/UserRegisterPage");
-	}
+    public void ToRegisterPage()
+    {
+        NavigationManager.NavigateTo("/UserRegisterPage");
+    }
 
-	public async Task ToMainMenu()
-	{
-		User user = await UserService.AuthenticateUserAsync(Username, UserPassword);
-		if (user != null)
-		{
-			if (user.UserRole.ToLowerInvariant() == "admin")
-			{
-				UserService.CurrentUser = user;
-				NavigationManager.NavigateTo("/AdminManage");
-			}
-			else
-			{
-				UserService.CurrentUser = user;
-				NavigationManager.NavigateTo("/UserMainMenu");
-			}
-		}
-		else
-		{
-			status = "wrong username or password";
-		}
-	}
+    public async Task ToMainMenu()
+    {
+        User user = await UserService.AuthenticateUserAsync(Username, UserPassword);
+        if (user != null)
+        {
+            if (user.UserRole.ToLowerInvariant() == "admin")
+            {
+                UserService.CurrentUser = user;
+                NavigationManager.NavigateTo("/AdminManage");
+            }
+            else
+            {
+                UserService.CurrentUser = user;
+                NavigationManager.NavigateTo("/UserMainMenu");
+            }
+        }
+        else
+        {
+            status = "wrong username or password";
+        }
+    }
 }
