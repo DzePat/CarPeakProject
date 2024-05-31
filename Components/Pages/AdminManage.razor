@@ -9,13 +9,13 @@
     @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
     {
         <h3>Welcome, @UserService.CurrentUser.Username!</h3>
-        <button class="NormalButton" @onclick="NavigateUserList">
+        <button class="NormalButton black-button" @onclick="NavigateUserList">
             Show all users
         </button>
-        <button class="NormalButton" @onclick="NavigateCarList">
+        <button class="NormalButton black-button" @onclick="NavigateCarList">
             Show all cars
         </button>
-        <button class="NormalButton" @onclick="NavigateBookList">
+        <button class="NormalButton black-button" @onclick="NavigateBookList">
             Show all books
         </button>
     }
