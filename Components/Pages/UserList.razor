@@ -3,38 +3,117 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 @inject UserService UserService
+@inject IJSRuntime JsRuntime
 
-<h3>UserList</h3>
-@if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
-{
-	<h3>Welcome, @UserService.CurrentUser.Username!</h3>
-	<h3>Role: @UserService.CurrentUser.UserRole!</h3>
-	<h2>User List</h2>
-	<ul>
-		@foreach (var user in Users)
-		{
-			<li>
-				<a href="@($"/UserDetails/{user.Username}")">
-					@user.Username
-				</a>
-			</li>
-		}
-	</ul>
-}
-else
-{
-	<p>You are not logged in.</p>
-}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-message {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .user-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .user-item {
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-link {
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .user-details {
+        color: #666;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .button-group {
+        margin-top: 10px;
+    }
+
+        .button-group button {
+            margin-right: 10px;
+        }
+</style>
+
+<div class="container">
+    @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
+    {
+        <div class="welcome-message">
+            Welcome, @UserService.CurrentUser.Username!
+            <br />
+            Role: @UserService.CurrentUser.UserRole
+        </div>
+
+        <h2>User List</h2>
+        <ul class="user-list">
+            @foreach (var user in Users)
+            {
+                <li class="user-item">
+                    <a href="@($"/UserDetails/{user.Username}")" class="user-link">@user.Username</a>
+                    <div class="user-details">
+                        Full Name: @user.FullName - Email: @user.Email
+                    </div>
+                    <div class="button-group">
+                        <button @onclick="() => EditUser(user.Username)">Edit</button>
+                        <button @onclick="() => DeleteUser(user.Username)">Delete</button>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>You are not logged in.</p>
+    }
+</div>
+
 @code {
-	//Get all list  Users
-	private List<User> Users = new List<User>();
-	protected override async Task OnInitializedAsync()
-	{
-		Users = await UserService.GetUsersAsync();
-	}
+    private List<User> Users = new List<User>();
 
-	private void NavigateToUser(string username)
-	{
-		NavigationManager.NavigateTo($"/UserDetails/{username}");
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        Users = await UserService.GetUsersAsync();
+    }
+
+    private void NavigateToUser(string username)
+    {
+        NavigationManager.NavigateTo($"/UserDetails/{username}");
+    }
+
+    private void EditUser(string username)
+    {
+        NavigationManager.NavigateTo($"/EditUser/{username}");
+    }
+
+    private async Task DeleteUser(string username)
+    {
+        var confirm = await JsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete user {username}?");
+        if (confirm)
+        {
+            await UserService.DeleteUserAsync(username);
+            Users = await UserService.GetUsersAsync(); // Refresh the list after deletion
+        }
+    }
 }
