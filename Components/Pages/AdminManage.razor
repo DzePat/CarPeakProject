@@ -3,25 +3,59 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 @inject UserService UserService
-//Notes
-<div style="background-color:white; color:black;">
+
+<style>
+    .admin-manage-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: #f0f0f0;
+        text-align: center;
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+        .button-container button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            .button-container button:hover {
+                background-color: #0056b3;
+            }
+</style>
+
+<div class="admin-manage-page">
     <h3>AdminManage</h3>
     @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
     {
         <h3>Welcome, @UserService.CurrentUser.Username!</h3>
-        <button class="NormalButton black-button" @onclick="NavigateUserList">
-            Show all users
-        </button>
-        <button class="NormalButton black-button" @onclick="NavigateCarList">
-            Show all cars
-        </button>
-        <button class="NormalButton black-button" @onclick="NavigateBookList">
-            Show all books
-        </button>
+        <div class="button-container">
+            <button @onclick="NavigateUserList">Show all users</button>
+            <button @onclick="NavigateCarList">Show all cars</button>
+            <button @onclick="NavigateBookList">Show all books</button>
+        </div>
+    }
+    else
+    {
+        <p>You are not authorized to view this page.</p>
     }
 </div>
-@code {
 
+@code {
     public void NavigateUserList()
     {
         NavigationManager.NavigateTo("/UserList");
