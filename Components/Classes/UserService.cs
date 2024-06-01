@@ -110,7 +110,20 @@ namespace CarPeak.Components.Classes
 			return await dbContext.Users.ToListAsync();
 		}
 
-		public async Task<List<Car>> GetCarsAsync()
+
+        public async Task DeleteUserAsync(string username)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (user != null)
+            {
+                dbContext.Users.Remove(user);
+                await dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<Car>> GetCarsAsync()
 		{
 			using var scope = _serviceProvider.CreateScope();
 			var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
