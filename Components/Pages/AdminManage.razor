@@ -40,13 +40,19 @@
     .back-button {
         border-radius: 10px;
         color: deeppink;
-        background-color: burlywood
+        background-color: burlywood;
+        margin-top: 20px;
+        padding: 10px 20px;
+        position: absolute; /* Added to position the button */
+        top: 20px; /* Adjust this value to your preference */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Adjust positioning */
         /* Add other button styles here */
     }
 </style>
 
 <div class="admin-manage-page">
-    <button class="back-button" @onclick="NavigateToUserLoginPage">Back</button> <!-- Add the back button here -->
+    <button class="back-button" @onclick="NavigateToUserLoginPage">Tillbaka till  inlogning sidan</button> <!-- Add the back button here -->
     <h3>AdminManage</h3>
     @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
     {
