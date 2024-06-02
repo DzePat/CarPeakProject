@@ -55,9 +55,17 @@
         .button-group button {
             margin-right: 10px;
         }
+
+    .back-button {
+        border-radius: 10px;
+        color: deeppink;
+        background-color: burlywood
+        /* Add other button styles here */
+    }
 </style>
 
 <div class="container">
+    <button class="back-button" @onclick="NavigateToMainPage">Back</button> <!-- Add the back button here -->
     @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
     {
         <div class="welcome-message">
@@ -115,5 +123,10 @@
             await UserService.DeleteUserAsync(username);
             Users = await UserService.GetUsersAsync(); // Refresh the list after deletion
         }
+    }
+
+    private void NavigateToMainPage()
+    {
+        NavigationManager.NavigateTo("/AdminManage");
     }
 }

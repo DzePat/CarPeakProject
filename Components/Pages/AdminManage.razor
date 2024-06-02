@@ -36,9 +36,17 @@
             .button-container button:hover {
                 background-color: #0056b3;
             }
+
+    .back-button {
+        border-radius: 10px;
+        color: deeppink;
+        background-color: burlywood
+        /* Add other button styles here */
+    }
 </style>
 
 <div class="admin-manage-page">
+    <button class="back-button" @onclick="NavigateToUserLoginPage">Back</button> <!-- Add the back button here -->
     <h3>AdminManage</h3>
     @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
     {
@@ -74,5 +82,9 @@
     protected override void OnParametersSet()
     {
         StateHasChanged();
+    }
+    private void NavigateToUserLoginPage()
+    {
+        NavigationManager.NavigateTo("/UserLoginPage");
     }
 }
