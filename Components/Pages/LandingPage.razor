@@ -1,33 +1,33 @@
-﻿@page "/UserLoginPage"
+﻿@page "/"
 @using CarPeak.Components.Classes
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 @inject UserService UserService
 
-<div class="Main-Container Backgrounds-image-Main">
+<div class="Main-Container">
 	<div class="vertical-container">
-		<input class="inputField" placeholder="Username" @bind-value="@Username" />
+		<input class="inputField" placeholder="Användarnamn" @bind-value="@Username" />
 		<div>
-			<input name="UserPassword" type="@passwordInputType" class="inputField" @bind-value="@UserPassword" placeholder="Password" />
+			<input name="UserPassword" type="@passwordInputType" class="inputField" @bind-value="@UserPassword" placeholder="Lösenord" />
 			<input type="checkbox" @bind="isPasswordVisible" />
 		</div>
 	</div>
 	<div>
-		<button class="NormalButton" @onclick="ToMainMenu">
-			Login
+		<button class="NormalButton black-button" @onclick="ToMainMenu">
+			Logga in
 		</button>
 		<button class="NormalButton brown-button" @onclick="ToRegisterPage">
-			Register
+			Registrera
 		</button>
 	</div>
-	<label>@status</label>
+	<label class="Text-Enrichment" style="color:white">@status</label>
 </div>
 
 @code {
 	private bool isPasswordVisible = false;
 	private string Username;
-	private string UserPassword; 
-	private string status; 
+	private string UserPassword;
+	private string status;
 	private string passwordInputType => isPasswordVisible ? "text" : "password";
 
 	public void ToRegisterPage()
@@ -58,3 +58,4 @@
 	}
 
 }
+
