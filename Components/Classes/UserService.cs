@@ -51,17 +51,18 @@ namespace CarPeak.Components.Classes
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<bool> CarIsNotBooked(int CarID,DateTime datefrom,DateTime dateto)
+        public async Task<bool> CarIsNotBooked(int CarID,DateTime? datefrom,DateTime? dateto)
 		{
             using var scope = _serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Query bookings for the specific car that overlap with the provided date range
             var bookings = await dbContext.Bookings
-                .Where(b => b.CarId == CarID && !(dateto < b.DateFrom.Date || datefrom > b.DateTo.Date))
+                .Where(b => b.CarId == CarID && !(dateto < b.DateFrom.Value.Date || datefrom > b.DateTo.Value.Date))
 				.ToListAsync();
-            // If any bookings are found, the car is booked for the given date range
-            return !bookings.Any();
+
+			// If any bookings are found, the car is booked for the given date range
+			return !bookings.Any();
         }
 
 		public async Task RemoveCarAsync(int? CarID)
@@ -149,10 +150,10 @@ namespace CarPeak.Components.Classes
                     {
                         var booking = new Booking
                         {
-                            Id = reader.GetInt32(0),
-                            CarName = reader.GetString(1),
-                            CustomerName = reader.GetString(2)
-                        };
+							Id = !reader.IsDBNull(0) ? reader.GetInt32(0) : 0,
+							CarName = reader.IsDBNull(1) ? null : reader.GetString(1),
+							CustomerName = reader.IsDBNull(2) ? null : reader.GetString(2)
+						};
                         bookings.Add(booking);
                     }
                 }
@@ -175,9 +176,13 @@ namespace CarPeak.Components.Classes
 			return await dbContext.Bookings.FirstOrDefaultAsync(u => u.Id == id);
 		}
 
-		public async Task<List<Car>> GetCarsByFilter(int size,string gearbox,string city,DateTime TimeFrom,DateTime TimeTo)
+		public async Task<List<Car>> GetCarsByFilter(int size,string gearbox,string city,DateTime? TimeFrom,DateTime? TimeTo)
 		{
-            using var scope = _serviceProvider.CreateScope();
+			// Search for cars based on the provided filter values
+            // please code for me
+
+
+			using var scope = _serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             var query = dbContext.Cars.AsQueryable();
@@ -216,8 +221,20 @@ namespace CarPeak.Components.Classes
 			return FilteredCars;
         }
 
+        public async Task<List<Car>> GetMyBookedCars(int UserId)
+        {
+            //Get all cars that the user has booked
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+            // Get all bookings for the user, including the related Car data
+            var cars = await dbContext.Bookings
+                .Where(b => b.UserId == UserId)
+                .Select(b => b.Car) // Select the Car data directly
+                .ToListAsync();
 
+            return cars;
+        }
 
         public async Task DeleteBookingAsync(int id)
         {
