@@ -5,14 +5,200 @@
 @inject CarPeak.Components.Classes.UserService Userservice;
 
 
-<div class="top-alignment">
-    <div class="Horizontal-Container-Custom-1">
-        <label class="Margin-Class Text-Enrichment">Från</label>
-        <input class="Margin-Class" name="DateFrom" type="date" @bind-value="booking.DateFrom" />
-        <label class="Margin-Class Text-Enrichment">Till</label>
-        <input class="Margin-Class" name="DateTo" type="date" @bind-value="booking.DateTo" />
-        <label class="Margin-Class Text-Enrichment">Sittplatser</label>
-        <select class="Margin-Class" style="height: 3vh" @bind="Seats">
+<style>
+
+
+
+    /* Centered Text Styles */
+    .center-text {
+        text-align: center;
+        margin-top: 20vh; /* Adjust as needed to center vertically */
+    }
+
+        .center-text h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .center-text p {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+
+
+
+
+
+    /* Modern Styles */
+    .container {
+        padding: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+
+    .filter-label {
+        font-weight: bold;
+        margin-right: 10px;
+        margin-top: 13px;
+    }
+
+    .filter-input {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+    }
+
+    .button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .logout-button {
+        background-color: #ff4d4d;
+        color: white;
+        margin-left: auto;
+    }
+
+    .search-button {
+        background-color: #4caf50;
+        color: white;
+    }
+
+    .modal {
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 50vw;
+        height: 60vh;
+        background-color: rgba(0, 0, 0, 0.9);
+        border: solid 1px white;
+        display: none;
+        z-index: 200;
+    }
+
+    .modal-content {
+        display: flex;
+        flex-direction: column;
+        padding: 2vh;
+        height: 100%;
+        justify-content: space-between;
+    }
+
+    .modal-image img {
+        width: 100%;
+        height: auto;
+        max-height: 40vh;
+        object-fit: cover;
+    }
+
+    .modal-details {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .book-button {
+        background-color: #4caf50;
+        color: white;
+    }
+
+    .cancel-button {
+        background-color: #795548;
+        color: white;
+    }
+
+    .car-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(22vw, 1fr));
+        gap: 20px;
+        width: 100%;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .car-card {
+        display: flex;
+        flex-direction: row;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+    }
+
+    .car-image {
+        width: 50%;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+        .car-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+    .car-details {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        color: #333;
+        font-size: 1rem;
+    }
+
+
+
+
+
+</style>
+
+
+
+
+
+<div class="container">
+
+    <div class="center-text">
+        <h1>Biluthyrning – sök, jämför och spara</h1>
+        <p>Gratis avbokning på de flesta bokningar</p>
+        <p>Över 60 000 uthyrningsplatser</p>
+        <p>Kundtjänst på fler än 40 språk</p>
+    </div>
+
+    <div class="filter-container">
+        <label class="filter-label">Från</label>
+        <input class="filter-input" name="DateFrom" type="date" @bind-value="booking.DateFrom" />
+        <label class="filter-label">Till</label>
+        <input class="filter-input" name="DateTo" type="date" @bind-value="booking.DateTo" />
+        <label class="filter-label">Sittplatser</label>
+        <select class="filter-input" @bind="Seats">
             <option value="0">välj</option>
             <option value="2">2</option>
             <option value="4">4</option>
@@ -22,14 +208,14 @@
             <option value="8">8</option>
             <option value="9">9</option>
         </select>
-        <label class="Margin-Class Text-Enrichment">Växellåda</label>
-        <select class="Margin-Class" style="height: 3vh" @bind="Gearbox">
+        <label class="filter-label">Växellåda</label>
+        <select class="filter-input" @bind="Gearbox">
             <option value="välj">välj</option>
             <option value="Manuell">Manuell</option>
             <option value="Auto">Automat</option>
         </select>
-        <label class="Margin-Class Text-Enrichment">Stad</label>
-        <select class="Margin-Class" style="height: 3vh" @bind="city">
+        <label class="filter-label">Stad</label>
+        <select class="filter-input" @bind="city">
             <option value="välj">välj</option>
             <option value="Stockholm">Stockholm</option>
             <option value="Göteborg">Göteborg</option>
@@ -42,40 +228,68 @@
             <option value="Jönköping">Jönköping</option>
             <option value="Norrköping">Norrköping</option>
         </select>
-        <button class="Custom-small-button Absolute-position-top-right" @onclick="LogoutClick">Logga ut</button>
-        <button class="Custom-small-button Margin-Class" style="background-color:green" @onclick="SearchCarsByFilter">Sök</button>
+        <button class="button logout-button" @onclick="LogoutClick">Logga ut</button>
+        <button class="button search-button" @onclick="SearchCarsByFilter">Sök</button>
+        <button class="Custom-small-button Margin-Class" style="background-color:green" @onclick="GetMyBookedCars">Bokat</button>
+
     </div>
-    <div style="display:flex; justify-content:center; position:absolute; top:10%; left:30%; width: 50vw; height: 60vh; background-color: rgba(0,0,0,0.9); border: solid 1px white; z-index:200; @VisibilityStyle; @PointerEventsStyle">
-        @if(SelectedCar != null)
+
+    <div class="modal" style="@VisibilityStyle @PointerEventsStyle">
+        @if (SelectedCar != null)
         {
-            <div style=" padding: 2vh; height: 40vh; width: 50vw; display: flex; flex-direction: row;">
-                <div style="height: 40vh; width: 35vw; display: flex; flex-direction: column; pointer-events:none;">
-                    <img src="/Images/@SelectedCar.ImageUrl" style="width: 100%; height: 100%; object-fit:fill" />
+            <div class="modal-content">
+                <div class="modal-image">
+                    <img src="/Images/@SelectedCar.ImageUrl" />
                 </div>
-                <div style="height: 40vh; width: 15vw; display: flex; flex-direction: column; background-color: rgba(0, 0, 0, 0.9); pointer-events:none;">
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Modell: @SelectedCar.Model</label>
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Tillverknings år: @SelectedCar.Year</label>
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Pris: @SelectedCar.PricePerDay Kr/Dag</label>
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Sittplatser: @SelectedCar.Size</label>
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Växellåda: @SelectedCar.Gearbox</label>
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Stad: @SelectedCar.City</label>
-                    <label style="margin:1vh; color: white; font-family:Arial; font-size:large; font-weight: 800;">Färg: @SelectedCar.Color</label>
+                <div class="modal-details">
+                    <label>Modell: @SelectedCar.Model</label>
+                    <label>Tillverknings år: @SelectedCar.Year</label>
+                    <label>Pris: @SelectedCar.PricePerDay Kr/Dag</label>
+                    <label>Sittplatser: @SelectedCar.Size</label>
+                    <label>Växellåda: @SelectedCar.Gearbox</label>
+                    <label>Stad: @SelectedCar.City</label>
+                    <label>Färg: @SelectedCar.Color</label>
                 </div>
-            </div>           
+                <div class="modal-actions">
+                    <button class="button book-button" @onclick="() => BookSelectedCarClick(SelectedCar)">Boka</button>
+                    <button class="button cancel-button" @onclick="() => CarClicked(null)">Tillbaka</button>
+                    <button class="Custom-small-button Margin-Class" style="background-color:green" @onclick="GetMyBookedCars">Bokat</button>
+                </div>
+            </div>
         }
-        <div style="display: flex; justify-content:center; align-items:flex-end; margin-top: 10vh">
-            <button class="NormalButton green-button" @onclick="() =>BookSelectedCarClick(SelectedCar)">Boka</button>
-            <button class="NormalButton brown-button" @onclick="() =>CarClicked(null)">Tillbaka</button>
-        </div>
     </div>
+
     @if (Cars != null)
     {
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(22vw, 1fr)); grid-auto-rows: 20vh; gap: 1vh; width: 100vw; height: 93vh; overflow-y: auto;">
+        <div class="car-grid">
             @foreach (Car car in Cars)
+            {
+                <div class="car-card" @onclick="() => CarClicked(car)">
+                    <div class="car-image">
+                        <img src="/Images/@car.ImageUrl" />
+                    </div>
+                    <div class="car-details">
+                        <label>Modell: @car.Model</label>
+                        <label>Pris: @car.PricePerDay Kr/Dag</label>
+                        <label>Sittplatser: @car.Size</label>
+                        <label>Växellåda: @car.Gearbox</label>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+
+
+
+    @if (BookedCars != null)
+    {
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(22vw, 1fr)); grid-auto-rows: 20vh; gap: 1vh; width: 100vw; height: 93vh; overflow-y: auto;">
+            @foreach (Car car in BookedCars)
             {
                 <div style="margin: 1px; height: 20vh; width: 24vw; display: flex; flex-direction: row; border:solid 1px white; z-index: 100; cursor: pointer;" @onclick="() =>CarClicked(car)">
                     <div style="height: 20vh; width: 12vw; display: flex; flex-direction: column; pointer-events:none;">
-                        <img src="/Images/@car.ImageUrl" style="width: 100%; height: 100%; object-fit:cover;"/>
+                        <img src="/Images/@car.ImageUrl" style="width: 100%; height: 100%; object-fit:cover;" />
                     </div>
                     <div style="height: 20vh; width: 12vw; display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.8); pointer-events:none;">
                         <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Modell: @car.Model</label>
@@ -85,7 +299,7 @@
                     </div>
                 </div>
             }
-        </div>    
+        </div>
     }
 </div>
 @code {
@@ -94,6 +308,7 @@
     private string city;
     Booking booking = new Booking();
     private List<Car> Cars;
+    private List<Car> BookedCars;
     private Car SelectedCar;
 
     //Car window pointer events and visibility
@@ -135,6 +350,11 @@
     private async Task SearchCarsByFilter()
     {
         Cars = await Userservice.GetCarsByFilter(Seats,Gearbox,city,booking.DateFrom,booking.DateTo);
+    }
+
+    private async Task GetMyBookedCars()
+    {
+        BookedCars = await Userservice.GetMyBookedCars(Userservice.CurrentUser.Id);
     }
 
     public bool AllInfoFilled(Booking bking)
