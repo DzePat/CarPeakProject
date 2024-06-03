@@ -69,6 +69,11 @@
         font-size: 1rem;
     }
 
+    button-size{
+        width: 6vw;
+        height: 5vh;
+    }
+
     .logout-button {
         background-color: #ff4d4d;
         color: white;
@@ -178,7 +183,15 @@
         color: #333;
         font-size: 1rem;
     }
+.vertical-alignment{
+    display:flex;
+    flex-direction: column;
+}
 
+    .horizontal-alignment {
+        display: flex;
+        flex-direction: row;
+    }
 
 
 
@@ -283,38 +296,37 @@
             }
         </div>
     }
-
-
-
-
-    @if (BookedCars != null)
-    {
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(22vw, 1fr)); grid-auto-rows: 20vh; gap: 1vh; width: 100vw; height: 93vh; overflow-y: auto;">
-            @foreach (Car car in BookedCars)
-            {
-                <div style="margin: 1px; height: 20vh; width: 24vw; display: flex; flex-direction: row; border:solid 1px white; z-index: 100; cursor: pointer;" @onclick="() =>CarClicked(car)">
-                    <div style="height: 20vh; width: 12vw; display: flex; flex-direction: column; pointer-events:none;">
-                        <img src="/Images/@car.ImageUrl" style="width: 100%; height: 100%; object-fit:cover;" />
-                    </div>
-                    <div style="height: 20vh; width: 12vw; display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.8); pointer-events:none;">
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Modell: @car.Model</label>
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Pris: @car.PricePerDay Kr/Dag</label>
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Sittplatser: @car.Size</label>
-                        <label style="color: black; font-family:Arial; font-size:large; font-weight: 800;">Växellåda: @car.Gearbox</label>
-                    </div>
-                </div>
-            }
-        </div>
-    }
 </div>
+@if (MyBookings != null)
+{
+    <div style="overflow-y:scroll; width: 20vw; height:60vh; background-color: rgb(0,0,0,0.9); position:fixed; top: 20%; left: 40%; @MyVisibilityStyle @MyPointerEventsStyle">
+        @foreach (BookingViewModel b in MyBookings)
+        {
+            <div class="horizontal-alignment align-items-center border-light p-2">
+                <div class="vertical-alignment">
+                    <label style="color:white">Id: @b.Booking.Id</label>
+                    <label style="color:white">Bil: @b.Car.Model; </label>
+                    <label style="color:white">Namn @b.User.Username</label>
+                    <label style="color:white">Från: @b.Booking.DateFrom</label>
+                    <label style="color:white">Till: @b.Booking.DateTo</label>
+                </div>
+                <button class="NormalButton brown-button" @onclick="() =>CancelBooking(b.Booking.Id)">Avboka</button>
+            </div>
+
+        }
+        <div class="modal-actions">
+            <button class="button cancel-button" @onclick="GetMyBookedCars">Tillbaka</button>
+        </div>
+    </div>
+}
+
 @code {
-    bool BookedCarsWindow = true;
     private int Seats;
     private string Gearbox;
     private string city;
     Booking booking = new Booking();
     private List<Car> Cars;
-    private List<Car> BookedCars;
+    private List<BookingViewModel> MyBookings;
     private Car SelectedCar;
 
     //Car window pointer events and visibility
@@ -323,6 +335,15 @@
 
     private string VisibilityStyle => isVisible ? "display: block;" : "display: none;";
     private string PointerEventsStyle => arePointerEventsEnabled ? "pointer-events: auto;" : "pointer-events: none;";
+
+    //MyBookings window pointer events and visibility
+    private bool isVisibleMy = false;
+    private bool arePointerEventsEnabledMy = false;
+
+    private string MyVisibilityStyle => isVisibleMy ? "display: block;" : "display: none;";
+    private string MyPointerEventsStyle => arePointerEventsEnabledMy ? "pointer-events: auto;" : "pointer-events: none;";
+
+
 
     public void LogoutClick()
     {
@@ -336,6 +357,15 @@
         SelectedCar = car;
     }
 
+    public async void CancelBooking(int id)
+    {
+        await Userservice.RemoveBooking(id);
+        GetMyBookedCars();
+        isVisibleMy = !isVisibleMy;
+        arePointerEventsEnabledMy = isVisibleMy;
+        SearchCarsByFilter();
+    }
+
     public async void BookSelectedCarClick(Car car)
     {
         booking.CarId = car.Id;
@@ -344,7 +374,7 @@
         {
             await Userservice.AddBookingAsync(booking);
             Console.WriteLine("Booked Succesfully");
-            SearchCarsByFilter();
+            await SearchCarsByFilter();
             CarClicked(null);
         }
         else
@@ -361,16 +391,9 @@
 
     private async Task GetMyBookedCars()
     {
-        if(BookedCarsWindow == true)
-        {
-            BookedCars = await Userservice.GetMyBookedCars(Userservice.CurrentUser.Id);
-            BookedCarsWindow = false;
-        }
-        else
-        {
-            BookedCars = null;
-            BookedCarsWindow = true;
-        }
+        MyBookings = await Userservice.GetMyBookings(Userservice.CurrentUser.Id);
+        isVisibleMy = !isVisibleMy;
+        arePointerEventsEnabledMy = isVisibleMy ;
     }
 
     public bool AllInfoFilled(Booking bking)

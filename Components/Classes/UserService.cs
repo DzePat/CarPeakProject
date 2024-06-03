@@ -231,12 +231,40 @@ namespace CarPeak.Components.Classes
 			return FilteredCars;
         }
 
-        public async Task<List<Car>> GetMyBookedCars(int UserId)
+        public async Task<List<BookingViewModel>> GetMyBookings(int UserId)
         {
-            //Get all cars that the user has booked
             using var scope = _serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            return null;
+
+            var query = dbContext.Bookings.AsQueryable();
+            query = query.Where(Booking => Booking.UserId == UserId);
+
+            List<Booking> tempBookings = await query.ToListAsync();
+
+            List<BookingViewModel> bookings = new List<BookingViewModel>();
+
+            foreach (var b in tempBookings)
+            {
+                BookingViewModel booking = new BookingViewModel();
+                booking.Booking = b;
+                booking.User = await GetUserByIdAsync(b.UserId);
+                booking.Car = await GetCarByIdAsync(b.CarId);
+                bookings.Add(booking);
+            }
+
+            return bookings;
+        }
+
+        public async Task RemoveBooking(int id)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var booking = await dbContext.Bookings.FirstOrDefaultAsync(u => u.Id == id);
+            if (booking != null)
+            {
+                dbContext.Bookings.Remove(booking);
+                await dbContext.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteBookingAsync(int id)
