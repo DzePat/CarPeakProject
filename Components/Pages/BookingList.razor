@@ -77,16 +77,16 @@
 
         <h2>Booking List</h2>
         <ul class="booking-list">
-            @foreach (var booking in Bookings)
+            @foreach (var booking in ListOfBookings)
             {
                 <li class="booking-item">
-                    <a href="@($"/BookingDetails/{booking.Id}")" class="booking-link">Booking ID: @booking.Id</a>
+                    <a href="@($"/BookingDetails/{booking.Booking.Id}")" class="booking-link">Booking ID: @booking.Booking.Id</a>
                     <div class="booking-details">
-                        Customer Name: @booking.CustomerName - Car Name: @booking.CarName
+                        Customer Name:  @booking.User.Username - Car Name: @booking.Car.Model
                     </div>
                     <div class="button-group">
-                        <button @onclick="() => EditBooking(booking.Id)">Edit</button>
-                        <button @onclick="() => DeleteBooking(booking.Id)">Delete</button>
+                        <button @onclick="() => EditBooking(booking.Booking.Id)">Edit</button>
+                        <button @onclick="() => DeleteBooking(booking.Booking.Id)">Delete</button>
                     </div>
                 </li>
             }
@@ -99,24 +99,44 @@
 </div>
 
 @code {
+    List<BookingViewModel> ListOfBookings = new List<BookingViewModel>();
+
+    private class BookingViewModel
+    {
+        public User User { get; set; }
+        public Booking Booking { get; set; }
+        public Car Car { get; set; }
+    }
+
+    private async Task<User> GetUser(int id)
+    {
+        return await UserService.GetUserByIdAsync(id);
+    }
+
     private List<Booking> Bookings = new List<Booking>();
 
     protected override async Task OnInitializedAsync()
     {
         Bookings = await UserService.GetBookingsAsync();
+
+        foreach(Booking b in Bookings)
+        {
+            BookingViewModel booking = new BookingViewModel();
+            booking.Booking = b;
+            booking.User = await UserService.GetUserByIdAsync(b.UserId);
+            booking.Car = await UserService.GetCarByIDAsync(b.CarId);
+            ListOfBookings.Add(booking);
+            
+        }
     }
     private void NavigateToMainPage()
     {
         NavigationManager.NavigateTo("/AdminManage");
     }
-    private void NavigateToBooking(int id)
-    {
-        NavigationManager.NavigateTo($"/BookingDetails/{id}");
-    }
 
     private void EditBooking(int id)
     {
-        NavigationManager.NavigateTo($"/EditBooking/{id}");
+        NavigationManager.NavigateTo($"/BookingDetails/{id}");
     }
 
     private async Task DeleteBooking(int id)
