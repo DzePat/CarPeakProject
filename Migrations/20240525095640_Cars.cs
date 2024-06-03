@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -43,6 +44,7 @@ namespace CarPeak.Migrations
                     Model = table.Column<string>(type: "TEXT", nullable: false),
                     Year = table.Column<string>(type: "TEXT", nullable: false),
                     Size = table.Column<string>(type: "TEXT", nullable: false),
+             
                     PricePerDay = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
