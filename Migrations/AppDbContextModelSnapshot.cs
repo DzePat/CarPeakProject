@@ -26,10 +26,10 @@ namespace CarPeak.Migrations
                     b.Property<int>("CarId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateFrom")
+                    b.Property<DateTime?>("DateFrom")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DateTo")
+                    b.Property<DateTime?>("DateTo")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")

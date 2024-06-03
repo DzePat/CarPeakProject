@@ -90,7 +90,14 @@ namespace CarPeak.Components.Classes
 			return await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
 		}
 
-		public async Task<User?> GetUserByUsernameAsync(string username)
+        public async Task<User> GetUserByIdAsync(int id)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            return await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<User?> GetUserByUsernameAsync(string username)
 		{
 			using var scope = _serviceProvider.CreateScope();
 			var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -131,35 +138,38 @@ namespace CarPeak.Components.Classes
 			return await dbContext.Cars.ToListAsync();
 		}
 
+        public async Task<Car> GetCarByIDAsync(int id)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            return await dbContext.Cars.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task UpdateBoking(int id,int userID,int carID, DateTime? DateFrom, DateTime? DateTo)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            Booking booking = await dbContext.Bookings.FirstOrDefaultAsync(u => u.Id == id);
+            if (booking != null)
+            {
+                booking.UserId = userID;
+                booking.CarId = carID;
+                booking.DateFrom = DateFrom;
+                booking.DateTo = DateTo;
+                await dbContext.SaveChangesAsync();
+                Console.WriteLine("edited successfully");
+            }
+            else
+            {
+                Console.WriteLine("Something wrong" + booking);
+            }
+        }
+
         public async Task<List<Booking>> GetBookingsAsync()
         {
-            var bookings = new List<Booking>();
-
-            using (var connection = new SqliteConnection("Data Source=app.db"))
-            {
-                await connection.OpenAsync();
-
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-            SELECT Id, CustomerName, CarName
-            FROM Bookings";
-
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var booking = new Booking
-                        {
-							Id = !reader.IsDBNull(0) ? reader.GetInt32(0) : 0,
-							CarName = reader.IsDBNull(1) ? null : reader.GetString(1),
-							CustomerName = reader.IsDBNull(2) ? null : reader.GetString(2)
-						};
-                        bookings.Add(booking);
-                    }
-                }
-            }
-
-            return bookings;
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            return await dbContext.Bookings.ToListAsync();
         }
 
         public async Task<Car?> GetCarByIdAsync(int id)
@@ -226,14 +236,7 @@ namespace CarPeak.Components.Classes
             //Get all cars that the user has booked
             using var scope = _serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            // Get all bookings for the user, including the related Car data
-            var cars = await dbContext.Bookings
-                .Where(b => b.UserId == UserId)
-                .Select(b => b.Car) // Select the Car data directly
-                .ToListAsync();
-
-            return cars;
+            return null;
         }
 
         public async Task DeleteBookingAsync(int id)

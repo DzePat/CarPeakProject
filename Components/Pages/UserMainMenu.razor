@@ -45,7 +45,7 @@
         padding: 10px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 100%;
+        width: 75vw;
     }
 
     .filter-label {
@@ -80,12 +80,17 @@
         color: white;
     }
 
+    .bookings-button{
+        background-color: darkgreen;
+        color: white;
+    }
+
     .modal {
         position: fixed;
         top: 10%;
         left: 50%;
         transform: translate(-50%, 0);
-        width: 50vw;
+        width: 32vw;
         height: 60vh;
         background-color: rgba(0, 0, 0, 0.9);
         border: solid 1px white;
@@ -95,16 +100,17 @@
 
     .modal-content {
         display: flex;
+        background-color: rgba(0, 0, 0, 0.9);
         flex-direction: column;
         padding: 2vh;
+        width: 32vw;
         height: 100%;
         justify-content: space-between;
     }
 
     .modal-image img {
-        width: 100%;
-        height: auto;
-        max-height: 40vh;
+        width: 30vw;
+        height: 25vh;
         object-fit: cover;
     }
 
@@ -230,7 +236,7 @@
         </select>
         <button class="button logout-button" @onclick="LogoutClick">Logga ut</button>
         <button class="button search-button" @onclick="SearchCarsByFilter">Sök</button>
-        <button class="Custom-small-button Margin-Class" style="background-color:green" @onclick="GetMyBookedCars">Bokat</button>
+        <button class="button bookings-button" style="background-color:green" @onclick="GetMyBookedCars">Mina bokningar</button>
 
     </div>
 
@@ -253,7 +259,6 @@
                 <div class="modal-actions">
                     <button class="button book-button" @onclick="() => BookSelectedCarClick(SelectedCar)">Boka</button>
                     <button class="button cancel-button" @onclick="() => CarClicked(null)">Tillbaka</button>
-                    <button class="Custom-small-button Margin-Class" style="background-color:green" @onclick="GetMyBookedCars">Bokat</button>
                 </div>
             </div>
         }
@@ -303,6 +308,7 @@
     }
 </div>
 @code {
+    bool BookedCarsWindow = true;
     private int Seats;
     private string Gearbox;
     private string city;
@@ -338,6 +344,7 @@
         {
             await Userservice.AddBookingAsync(booking);
             Console.WriteLine("Booked Succesfully");
+            SearchCarsByFilter();
             CarClicked(null);
         }
         else
@@ -354,7 +361,16 @@
 
     private async Task GetMyBookedCars()
     {
-        BookedCars = await Userservice.GetMyBookedCars(Userservice.CurrentUser.Id);
+        if(BookedCarsWindow == true)
+        {
+            BookedCars = await Userservice.GetMyBookedCars(Userservice.CurrentUser.Id);
+            BookedCarsWindow = false;
+        }
+        else
+        {
+            BookedCars = null;
+            BookedCarsWindow = true;
+        }
     }
 
     public bool AllInfoFilled(Booking bking)

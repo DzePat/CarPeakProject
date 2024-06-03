@@ -180,8 +180,9 @@
         if (NewCar.AllFieldsFilled())
         {
             await UserService.AddCarAsync(NewCar);
-            CloseClicked();
             Cars = await UserService.GetCarsAsync();
+            NewCar = new Car();
+            CloseClicked();
         }
         else
         {

@@ -1,6 +1,8 @@
 ﻿@page "/BookingDetails/{Id:int}"
 @using CarPeak.Components.Classes
+@rendermode InteractiveServer
 @inject UserService UserService
+@inject NavigationManager NavigationManager
 
 <h3>Booking Details</h3>
 
@@ -10,11 +12,27 @@
 }
 else
 {
-    <p>Id: @booking.Id</p>
-    <p>Car Id: @booking.CarId</p>
-    <p>User Id: @booking.UserId</p>
-    <p>Start Date: @booking.DateFrom</p>
-    <p>End Date: @booking.DateTo</p>
+    <p style="margin-left:2vw; margin-top:1vh;">Id: @booking.Id</p>
+    <div style="margin-left:2vw; margin-top:1vh; display:flex; flex-direction:row; align-items:center;">
+        <label style="text-align:center">Car Id: </label>
+        <input placeholder="@booking.CarId" @bind-value="@booking.CarId"/>
+    </div>
+    <div style="margin-left:2vw; margin-top:1vh; display:flex; flex-direction:row; align-items:center;">
+        <label style="text-align:center">User id: </label>
+        <input placeholder="@booking.UserId" @bind-value="@booking.UserId" />
+    </div>
+    <div style="margin-left:2vw; margin-top:1vh; display:flex; flex-direction:row; align-items:center;">
+        <label style="text-align:center">From: </label>
+        <input placeholder="@booking.DateFrom" type="date" @bind-value="@booking.DateFrom" />
+    </div>
+    <div style="margin-left:2vw; margin-top:1vh; display:flex; flex-direction:row; align-items:center;">
+        <label style="text-align:center">To: </label>
+        <input placeholder="@booking.DateTo" type="date" @bind-value="@booking.DateTo" />
+    </div>
+    <div>
+        <button class="NormalButton brown-button" @onclick="EditBooking">Redigera</button>
+        <button class="NormalButton black-button" @onclick="NavigateBack">Tillbaka</button>
+    </div>
 }
 
 @code {
@@ -22,6 +40,17 @@ else
     public int Id { get; set; }
 
     public Booking booking { get; set; }
+
+    public async void EditBooking()
+    {
+        await UserService.UpdateBoking(booking.Id, booking.UserId, booking.CarId, booking.DateFrom, booking.DateTo);
+        await OnInitializedAsync();
+    }
+
+    public async void NavigateBack()
+    {
+        NavigationManager.NavigateTo($"/BookingList");
+    }
 
     protected override async Task OnInitializedAsync()
     {
