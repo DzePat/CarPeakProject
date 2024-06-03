@@ -101,13 +101,6 @@
 @code {
     List<BookingViewModel> ListOfBookings = new List<BookingViewModel>();
 
-    private class BookingViewModel
-    {
-        public User User { get; set; }
-        public Booking Booking { get; set; }
-        public Car Car { get; set; }
-    }
-
     private async Task<User> GetUser(int id)
     {
         return await UserService.GetUserByIdAsync(id);
