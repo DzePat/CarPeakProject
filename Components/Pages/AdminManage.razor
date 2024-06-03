@@ -52,15 +52,15 @@
 </style>
 
 <div class="admin-manage-page">
-    <button class="back-button" @onclick="NavigateToUserLoginPage">Tillbaka till  inlogning sidan</button> <!-- Add the back button here -->
+    <button class="back-button" @onclick="NavigateToUserLoginPage">Logga ut</button> <!-- Add the back button here -->
     <h3>AdminManage</h3>
     @if (UserService.CurrentUser != null && UserService.CurrentUser.UserRole.ToLowerInvariant() == "admin")
     {
         <h3>Welcome, @UserService.CurrentUser.Username!</h3>
         <div class="button-container">
-            <button @onclick="NavigateUserList">Show all users</button>
-            <button @onclick="NavigateCarList">Show all cars</button>
-            <button @onclick="NavigateBookList">Show all books</button>
+            <button @onclick="NavigateUserList">Hantera användare</button>
+            <button @onclick="NavigateCarList">Hantera Bilar</button>
+            <button @onclick="NavigateBookList">Hantera bokningar</button>
         </div>
     }
     else
